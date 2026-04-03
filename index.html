@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="WorldString: an actionable world representation for physical objects—learned token assignment and error maps from keypoint-conditioned 3D modeling."
+    />
+    <title>Actionable World Representation — WorldString</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,500;0,600;0,700;1,400&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="page">
+      <header class="hero">
+        <p class="hero-kicker">Actionable world modeling · WorldString</p>
+        <h1 class="hero-title">Actionable World Representation</h1>
+        <p class="hero-tagline">
+          A neural architecture that learns the <strong>state manifold</strong> of real-world objects as a
+          <strong>differentiable digital twin</strong>—from point clouds or RGB-D, toward policy and dynamics.
+        </p>
+      </header>
+
+      <section class="paper-blurb" aria-labelledby="abstract-heading">
+        <h2 id="abstract-heading" class="blurb-heading">Abstract</h2>
+        <p class="blurb-text">
+          Recent large models show strong conceptual world modeling, but grounded <em>physical</em> understanding
+          requires representations in which objects are first-class, <strong>actionable</strong> entities with
+          changing state. We study this setting through a world-model lens that separates dynamic
+          <strong>objects</strong> from largely static <strong>background</strong>, and relates canonical shape,
+          sparse structural keypoints, and deformation through a learnable mapping&nbsp;Φ<sub>u</sub>.
+        </p>
+        <p class="blurb-text">
+          We propose <strong>WorldString</strong>, a fully differentiable pipeline that encodes geometry with
+          learnable embeddings, conditions them on object state via a <strong>State Transformer</strong>,
+          refines global structure with an <strong>Object Transformer</strong>, and decodes occupancy with a
+          <strong>Voxel Transformer</strong> from spatial queries. Trained from point clouds or RGB-D streams,
+          WorldString serves as a versatile building block for physical world models and interfaces naturally with
+          policy learning and neural dynamics.
+        </p>
+      </section>
+
+      <section class="paper-contrib" aria-labelledby="contrib-heading">
+        <h2 id="contrib-heading" class="blurb-heading">Contributions (at a glance)</h2>
+        <ul class="paper-list">
+          <li>
+            <strong>WorldString.</strong> An actionable representation that learns object-centric digital twins
+            from point clouds or RGB-D video, unifying articulated, skinning, and soft objects under a common
+            keypoint-conditioned formulation.
+          </li>
+          <li>
+            <strong>Differentiable three-stage architecture.</strong> State → Object → Voxel transformers map from
+            sparse keypoint state to structured latent geometry and explicit 3D occupancy.
+          </li>
+          <li>
+            <strong>Interpretable visualization.</strong> Surface colors show <em>learned token assignment</em> to
+            regions; an <em>error map</em> highlights mismatches against ground truth (true / false positives and
+            negatives).
+          </li>
+        </ul>
+      </section>
+
+      <section class="viz-section" aria-labelledby="viz-heading">
+        <h2 id="viz-heading" class="section-title">Interactive figure (supplementary)</h2>
+        <p class="section-lead">
+          Same temporal sequence in two panels: <strong>learned token-colored occupancy</strong> (left) and an
+          <strong>error map</strong> (right). Two synchronized 10&nbsp;fps loops (100 frames). Drag to rotate,
+          scroll to zoom; pan is disabled. The camera target remains the point-cloud center.
+        </p>
+
+        <div class="viz-grid">
+          <article class="viz-card" data-side="left">
+            <div class="viz-card-head">
+              <h3 class="viz-card-title">Learned token assignment</h3>
+              <span class="viz-card-meta" id="status-left">Loading…</span>
+            </div>
+            <div class="viewer" id="viewer-left"></div>
+            <div class="controls">
+              <button id="btnPlay-left" type="button">Pause</button>
+              <label class="row">
+                <span class="label">Frame</span>
+                <input id="slider-left" type="range" min="0" max="0" step="1" value="0" />
+                <span class="value" id="frameText-left">0/0</span>
+              </label>
+            </div>
+          </article>
+
+          <article class="viz-card" data-side="right">
+            <div class="viz-card-head">
+              <h3 class="viz-card-title">Error map vs. ground truth</h3>
+              <span class="viz-card-meta" id="status-right">Loading…</span>
+            </div>
+            <div class="viewer" id="viewer-right"></div>
+            <div class="controls">
+              <button id="btnPlay-right" type="button">Pause</button>
+              <label class="row">
+                <span class="label">Frame</span>
+                <input id="slider-right" type="range" min="0" max="0" step="1" value="0" />
+                <span class="value" id="frameText-right">0/0</span>
+              </label>
+            </div>
+          </article>
+        </div>
+
+        <p class="viz-footnote">
+          Error map legend: <strong>green</strong> — true positive · <strong>red</strong> — false positive ·
+          <strong>blue</strong> — false negative. (Colors in the right panel are softened slightly for display.)
+        </p>
+      </section>
+
+      <footer class="site-footer">
+        <p>
+          <cite>Actionable World Representation</cite> — WorldString · interactive supplementary visualization.
+        </p>
+      </footer>
+    </div>
+
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://unpkg.com/three@0.161.0/build/three.module.js"
+        }
+      }
+    </script>
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>
