@@ -159,11 +159,49 @@ body {
   margin-bottom: 2.5rem;
 }
 
+.viz-subsection-title {
+  margin: 2.25rem 0 0.5rem;
+  font-family: "Crimson Pro", Georgia, serif;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: 0.01em;
+}
+
+.viz-subsection-lead {
+  margin-bottom: 1.25rem;
+}
+
 .viz-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1.25rem;
   align-items: stretch;
+}
+
+.viz-grid--cols3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+/* Equal-width columns: long text in the third card must not widen the grid track. */
+.viz-grid--cols3 > .viz-card {
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Same canvas geometry: width follows column; height from fixed aspect (columns share width → same size). */
+.viz-grid--cols3 .viewer {
+  flex: 0 0 auto;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  min-height: 0;
+}
+
+@media (max-width: 1200px) {
+  .viz-grid--cols3 {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 900px) {
@@ -218,6 +256,18 @@ body {
   background: radial-gradient(ellipse 80% 60% at 50% 40%, #1a1e28 0%, #0e1014 100%);
 }
 
+/* In 3-col grids, .viz-grid--cols3 .viewer overrides flex/min-height for equal canvases. */
+.viewer--kp {
+  min-height: 280px;
+}
+
+/* Reserves the same vertical space as the keypoint "Sync…" row so the canvas height matches. */
+.controls-sync-spacer {
+  flex-basis: 100%;
+  min-height: 2.35rem;
+  pointer-events: none;
+}
+
 .viewer canvas {
   width: 100%;
   height: 100%;
@@ -240,6 +290,16 @@ body {
   gap: 0.5rem;
   flex: 1;
   min-width: 0;
+}
+
+.row--checkbox {
+  flex-basis: 100%;
+  justify-content: flex-start;
+}
+
+.row--checkbox .label {
+  white-space: normal;
+  line-height: 1.25;
 }
 
 .label {
