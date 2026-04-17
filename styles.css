@@ -153,6 +153,43 @@ body {
   color: var(--muted);
 }
 
+.pipeline-section {
+  width: 100%;
+  max-width: 100%;
+  margin-bottom: 2.5rem;
+  overflow-x: clip;
+}
+
+.pipeline-video-wrap {
+  margin: 0;
+  width: 100%;
+  max-width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  background: linear-gradient(165deg, var(--surface) 0%, var(--surface2) 100%);
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.35);
+  box-sizing: border-box;
+}
+
+.pipeline-video {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  max-height: min(70vh, 620px);
+  display: block;
+  background: #000;
+  object-fit: contain;
+}
+
+.pipeline-caption {
+  margin: 0;
+  padding: 0.6rem 0.9rem 0.7rem;
+  border-top: 1px solid var(--border);
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
 .viz-section {
   width: 100%;
   max-width: 100%;

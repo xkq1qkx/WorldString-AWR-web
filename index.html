@@ -66,6 +66,21 @@
         </ul>
       </section>
 
+      <section class="pipeline-section" aria-labelledby="pipeline-heading">
+        <h2 id="pipeline-heading" class="section-title">Real Object Data Pipeline</h2>
+        <p class="section-lead">
+          Pipeline overview for collecting and processing real object data used in WorldString training and
+          evaluation.
+        </p>
+        <figure class="pipeline-video-wrap">
+          <video class="pipeline-video" controls autoplay muted loop playsinline preload="metadata">
+            <source src="./real_data_pipeline.mov" />
+            Your browser does not support the video tag.
+          </video>
+          <figcaption class="pipeline-caption">Real object data processing pipeline.</figcaption>
+        </figure>
+      </section>
+
       <section class="viz-section" aria-labelledby="viz-heading">
         <h2 id="viz-heading" class="section-title">Interactive figure (supplementary)</h2>
         <p class="section-lead">
@@ -257,8 +272,9 @@
         </div>
 
         <p class="viz-footnote">
-          Error map: <strong>green</strong> — TP · <strong>red</strong> — FP · <strong>blue</strong> — FN (softened in
-          the panel). Keypoints are colored by joint index (HSV) and drawn as shaded spheres; they use the same frame
+          Error map: <strong>green</strong> — TP · <strong>red</strong> — FP · <strong>blue</strong> — FN (red/blue are
+          blended toward the panel background for readability). Keypoints are colored by joint index (HSV) and drawn as
+          shaded spheres; they use the same frame
           index as the adjacent shape panels.
         </p>
       </section>

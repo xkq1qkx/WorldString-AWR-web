@@ -33,25 +33,36 @@ function parseFrameBuffer(buffer, nMax) {
 
 /**
  * Soften FP (red) and FN (blue) in error-map visualization; leaves TP (green) roughly as-is.
+ * Moves red/blue hues toward a soft green anchor so the panel looks less harsh but still separable.
  * Applied in the browser only — no need to re-export PLY.
  */
 function softenErrorMapColors(colorsU8, nMax) {
   const n = nMax * 3;
-  const blend = 0.5;
+  const greenR = 120;
+  const greenG = 200;
+  const greenB = 120;
+  const towardGreen = 0.55;
+  const softenBlend = 0.38;
   for (let i = 0; i < n; i += 3) {
     const r = colorsU8[i];
     const g = colorsU8[i + 1];
     const b = colorsU8[i + 2];
     // FP: dominant red
     if (r > 180 && g < 130 && b < 130 && r > g + 35 && r > b + 35) {
-      colorsU8[i] = Math.min(255, Math.round(r * (1 - blend) + 218 * blend));
-      colorsU8[i + 1] = Math.min(255, Math.round(g * (1 - blend) + 135 * blend));
-      colorsU8[i + 2] = Math.min(255, Math.round(b * (1 - blend) + 125 * blend));
+      let r1 = Math.min(255, Math.round(r * (1 - softenBlend) + 218 * softenBlend));
+      let g1 = Math.min(255, Math.round(g * (1 - softenBlend) + 135 * softenBlend));
+      let b1 = Math.min(255, Math.round(b * (1 - softenBlend) + 125 * softenBlend));
+      colorsU8[i] = Math.min(255, Math.round(r1 * (1 - towardGreen) + greenR * towardGreen));
+      colorsU8[i + 1] = Math.min(255, Math.round(g1 * (1 - towardGreen) + greenG * towardGreen));
+      colorsU8[i + 2] = Math.min(255, Math.round(b1 * (1 - towardGreen) + greenB * towardGreen));
     } else if (b > 180 && r < 130 && g < 130 && b > r + 35 && b > g + 35) {
       // FN: dominant blue
-      colorsU8[i] = Math.min(255, Math.round(r * (1 - blend) + 125 * blend));
-      colorsU8[i + 1] = Math.min(255, Math.round(g * (1 - blend) + 155 * blend));
-      colorsU8[i + 2] = Math.min(255, Math.round(b * (1 - blend) + 218 * blend));
+      let r1 = Math.min(255, Math.round(r * (1 - softenBlend) + 125 * softenBlend));
+      let g1 = Math.min(255, Math.round(g * (1 - softenBlend) + 155 * softenBlend));
+      let b1 = Math.min(255, Math.round(b * (1 - softenBlend) + 218 * softenBlend));
+      colorsU8[i] = Math.min(255, Math.round(r1 * (1 - towardGreen) + greenR * towardGreen));
+      colorsU8[i + 1] = Math.min(255, Math.round(g1 * (1 - towardGreen) + greenG * towardGreen));
+      colorsU8[i + 2] = Math.min(255, Math.round(b1 * (1 - towardGreen) + greenB * towardGreen));
     }
   }
 }
