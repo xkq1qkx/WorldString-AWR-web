@@ -18,7 +18,7 @@ const kpSphereDouble = 0.031;
 
 async function loadMeta(runDir) {
   const metaUrl = `${runDir}/frames_meta.json`;
-  const res = await fetch(metaUrl, { cache: "no-store" });
+  const res = await fetch(metaUrl, { cache: "default" });
   if (!res.ok) throw new Error(`Failed to load meta: ${metaUrl}`);
   return await res.json();
 }
@@ -67,34 +67,64 @@ function softenErrorMapColors(colorsU8, nMax) {
   }
 }
 
-async function preloadBuffers(meta, framesBaseUrl, setStatus) {
+/**
+ * Lazy frame loader: fetch on demand + optional background prefetch.
+ * Uses HTTP cache (default) so GitHub Pages and repeat visits are much faster than cache: "no-store".
+ */
+function createFrameLoader(meta, framesBaseUrl) {
   const nFrames = meta.frameCount;
   const buffers = new Array(nFrames);
-  const concurrency = 8;
-  let nextIdx = 0;
-  let loaded = 0;
+  const inflight = new Map();
 
-  async function worker() {
-    while (true) {
-      const cur = nextIdx;
-      nextIdx += 1;
-      if (cur >= nFrames) return;
-      const f = meta.frames[cur];
-      const url = `${framesBaseUrl}${f.bin}`;
-      const res = await fetch(url, { cache: "no-store" });
-      if (!res.ok) throw new Error(`Failed to load frame ${cur}: ${url}`);
-      buffers[cur] = await res.arrayBuffer();
-      loaded += 1;
-      if (loaded === 1 || loaded % 10 === 0 || loaded === nFrames) {
-        setStatus(`Preloading: ${loaded}/${nFrames}`);
-      }
-    }
+  async function loadFrame(i) {
+    if (i < 0 || i >= nFrames) throw new Error(`Bad frame index: ${i}`);
+    if (buffers[i]) return buffers[i];
+    if (inflight.has(i)) return inflight.get(i);
+    const f = meta.frames[i];
+    const url = `${framesBaseUrl}${f.bin}`;
+    const p = fetch(url, { cache: "default" })
+      .then((res) => {
+        if (!res.ok) throw new Error(`Failed to load frame ${i}: ${url}`);
+        return res.arrayBuffer();
+      })
+      .then((ab) => {
+        buffers[i] = ab;
+        inflight.delete(i);
+        return ab;
+      });
+    inflight.set(i, p);
+    return p;
   }
 
-  const workers = [];
-  for (let i = 0; i < concurrency; i++) workers.push(worker());
-  await Promise.all(workers);
-  return buffers;
+  /** Prefetch all missing frames in the background (does not need to be awaited). */
+  function prefetchAll(setStatus, concurrency = 6) {
+    const pending = [];
+    for (let i = 0; i < nFrames; i++) {
+      if (!buffers[i]) pending.push(i);
+    }
+    let loaded = nFrames - pending.length;
+    let next = 0;
+
+    async function worker() {
+      while (true) {
+        const k = next;
+        next += 1;
+        if (k >= pending.length) return;
+        const idx = pending[k];
+        await loadFrame(idx);
+        loaded += 1;
+        if (loaded % 15 === 0 || loaded === nFrames) {
+          setStatus(`Caching frames: ${loaded}/${nFrames}`);
+        }
+      }
+    }
+
+    const workers = [];
+    for (let i = 0; i < concurrency; i++) workers.push(worker());
+    return Promise.all(workers);
+  }
+
+  return { buffers, loadFrame, prefetchAll, frameCount: nFrames };
 }
 
 /**
@@ -256,9 +286,18 @@ async function initViewer(opts) {
     pointOrInst = points;
   }
 
-  setStatus(`Preloading: 0/${frameCount}`);
-  const buffers = await preloadBuffers(meta, framesBaseUrl, setStatus);
+  setStatus("Loading first frame…");
+  const { buffers, loadFrame, prefetchAll } = createFrameLoader(meta, framesBaseUrl);
+  await loadFrame(0);
   setStatus("Playing…");
+  prefetchAll(setStatus, 6)
+    .then(() => {
+      setStatus("Playing…");
+    })
+    .catch((e) => {
+      console.error(e);
+      setStatus("Ready (background caching incomplete)");
+    });
 
   let playing = true;
   btnPlayEl.textContent = "Pause";
@@ -270,6 +309,8 @@ async function initViewer(opts) {
   let externallyDriven = false;
   /** @type {null | ((state: { frameIdx: number; playing: boolean }) => void)} */
   let onTick = null;
+  /** @type {Promise<void> | null} */
+  let frameLoadInFlight = null;
 
   function renderFrame(i) {
     const buf = buffers[i];
@@ -343,8 +384,22 @@ async function initViewer(opts) {
     btnPlayEl.textContent = "Play";
     frameIdx = Number(sliderEl.value);
     updateRangeUI(frameIdx, frameCount);
-    renderFrame(frameIdx);
-    setStatus(`Paused at frame ${frameIdx + 1}`);
+    const idx = frameIdx;
+    if (buffers[idx]) {
+      renderFrame(idx);
+      setStatus(`Paused at frame ${idx + 1}`);
+    } else {
+      setStatus(`Loading frame ${idx + 1}…`);
+      loadFrame(idx)
+        .then(() => {
+          renderFrame(idx);
+          setStatus(`Paused at frame ${idx + 1}`);
+        })
+        .catch((e) => {
+          console.error(e);
+          setStatus(`Error loading frame ${idx + 1}`);
+        });
+    }
   });
 
   function tick(now) {
@@ -361,7 +416,27 @@ async function initViewer(opts) {
         frameIdx = next;
         updateRangeUI(frameIdx, frameCount);
       }
-      if (frameIdx !== lastRendered) renderFrame(frameIdx);
+      const idx = frameIdx;
+      if (buffers[idx]) {
+        for (let k = 1; k <= 6; k++) {
+          const j = (idx + k) % frameCount;
+          if (!buffers[j]) loadFrame(j).catch((e) => console.error(e));
+        }
+        if (idx !== lastRendered) renderFrame(idx);
+      } else if (!frameLoadInFlight) {
+        setStatus(`Loading frame ${idx + 1}…`);
+        frameLoadInFlight = loadFrame(idx)
+          .then(() => {
+            frameLoadInFlight = null;
+            renderFrame(idx);
+            setStatus("Playing…");
+          })
+          .catch((e) => {
+            frameLoadInFlight = null;
+            console.error(e);
+            setStatus(`Error loading frame ${idx + 1}`);
+          });
+      }
     }
     controls.update();
     renderer.render(scene, camera);
@@ -415,14 +490,34 @@ async function initViewer(opts) {
       playing = Boolean(playingFromLeader);
       btnPlayEl.textContent = playing ? "Pause" : "Play";
       updateRangeUI(frameIdx, frameCount);
-      renderFrame(frameIdx);
-      if (playing) {
-        startMs = performance.now() - frameIdx * frameMs;
-        setStatus("Playing…");
+      const i = frameIdx;
+      if (buffers[i]) {
+        renderFrame(i);
+        if (playing) {
+          startMs = performance.now() - frameIdx * frameMs;
+          setStatus("Playing…");
+        } else {
+          setStatus(`Paused at frame ${i + 1}`);
+        }
+        redraw();
       } else {
-        setStatus(`Paused at frame ${frameIdx + 1}`);
+        setStatus(`Loading frame ${i + 1}…`);
+        loadFrame(i)
+          .then(() => {
+            renderFrame(i);
+            if (playing) {
+              startMs = performance.now() - frameIdx * frameMs;
+              setStatus("Playing…");
+            } else {
+              setStatus(`Paused at frame ${i + 1}`);
+            }
+            redraw();
+          })
+          .catch((e) => {
+            console.error(e);
+            setStatus(`Error loading frame ${i + 1}`);
+          });
       }
-      redraw();
     },
     redraw,
   };
