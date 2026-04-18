@@ -30,7 +30,7 @@ body {
   width: 100%;
   max-width: min(1600px, 100%);
   margin: 0 auto;
-  padding: 2.5rem clamp(1rem, 3vw, 2.5rem) 3rem;
+  padding: 5rem clamp(7rem, 20vw, 16rem) 6rem;
   box-sizing: border-box;
 }
 
@@ -164,15 +164,16 @@ body {
   overflow-x: clip;
 }
 
+/* Flush with page: no card chrome — video pixels meet --bg seamlessly. */
 .pipeline-video-wrap {
   margin: 0;
   width: 100%;
   max-width: 100%;
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  overflow: hidden;
-  background: #fff;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+  border: none;
+  border-radius: 0;
+  overflow: visible;
+  background: var(--bg);
+  box-shadow: none;
   box-sizing: border-box;
 }
 
@@ -182,14 +183,14 @@ body {
   height: auto;
   max-height: min(70vh, 620px);
   display: block;
-  background: #fff;
+  background: var(--bg);
   object-fit: contain;
 }
 
 .pipeline-caption {
-  margin: 0;
-  padding: 0.6rem 0.9rem 0.7rem;
-  border-top: 1px solid var(--border);
+  margin: 0.5rem 0 0;
+  padding: 0;
+  border: none;
   font-size: 0.82rem;
   color: var(--muted);
 }
