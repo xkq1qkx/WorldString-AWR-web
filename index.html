@@ -98,14 +98,34 @@
       <section class="viz-section" aria-labelledby="viz-heading">
         <h2 id="viz-heading" class="section-title">Interactive figure (supplementary)</h2>
         <p class="section-lead">
-          Each row has three panels: <strong>learned token-colored shape</strong>, <strong>error map</strong>, and
-          <strong>input keypoints</strong> (same timestamps as the <code>.da</code> sequence). Drag to rotate,
-          scroll to zoom; pan is disabled. The camera target stays at the cloud / keypoint center. Use
-          <strong>Sync other panels to this view</strong> on the keypoint column to mirror its camera, frame, and
-          play/pause state to the other two panels in that row.
+          Each row has three panels (left to right): <strong>input keypoints</strong>,
+          <strong>learned token-colored shape</strong>, and <strong>error map</strong> (same timestamps as the
+          <code>.da</code> sequence). Drag to rotate, scroll to zoom; pan is disabled. The camera target stays at the
+          cloud / keypoint center. Use <strong>Sync other panels to this view</strong> on the keypoint column to mirror
+          its camera, frame, and play/pause state to the other two panels in that row.
         </p>
 
         <div class="viz-grid viz-grid--cols3">
+          <article class="viz-card" data-side="kp">
+            <div class="viz-card-head">
+              <h3 class="viz-card-title">Keypoints (input)</h3>
+              <span class="viz-card-meta" id="status-kp-hand">Loading…</span>
+            </div>
+            <div class="viewer viewer--kp" id="viewer-kp-hand"></div>
+            <div class="controls">
+              <label class="row row--checkbox">
+                <input id="sync-follow-kp-hand" type="checkbox" />
+                <span class="label">Sync other panels to this view</span>
+              </label>
+              <button id="btnPlay-kp-hand" type="button">Pause</button>
+              <label class="row">
+                <span class="label">Frame</span>
+                <input id="slider-kp-hand" type="range" min="0" max="0" step="1" value="0" />
+                <span class="value" id="frameText-kp-hand">0/0</span>
+              </label>
+            </div>
+          </article>
+
           <article class="viz-card" data-side="left">
             <div class="viz-card-head">
               <h3 class="viz-card-title">Learned token assignment</h3>
@@ -139,26 +159,6 @@
               </label>
             </div>
           </article>
-
-          <article class="viz-card" data-side="kp">
-            <div class="viz-card-head">
-              <h3 class="viz-card-title">Keypoints (input)</h3>
-              <span class="viz-card-meta" id="status-kp-hand">Loading…</span>
-            </div>
-            <div class="viewer viewer--kp" id="viewer-kp-hand"></div>
-            <div class="controls">
-              <label class="row row--checkbox">
-                <input id="sync-follow-kp-hand" type="checkbox" />
-                <span class="label">Sync other panels to this view</span>
-              </label>
-              <button id="btnPlay-kp-hand" type="button">Pause</button>
-              <label class="row">
-                <span class="label">Frame</span>
-                <input id="slider-kp-hand" type="range" min="0" max="0" step="1" value="0" />
-                <span class="value" id="frameText-kp-hand">0/0</span>
-              </label>
-            </div>
-          </article>
         </div>
 
         <h3 class="viz-subsection-title">SMPL football motion (skinning)</h3>
@@ -168,6 +168,26 @@
         </p>
 
         <div class="viz-grid viz-grid--cols3">
+          <article class="viz-card" data-side="kp">
+            <div class="viz-card-head">
+              <h3 class="viz-card-title">Keypoints (input)</h3>
+              <span class="viz-card-meta" id="status-kp-smpl">Loading…</span>
+            </div>
+            <div class="viewer viewer--kp" id="viewer-kp-smpl"></div>
+            <div class="controls">
+              <label class="row row--checkbox">
+                <input id="sync-follow-kp-smpl" type="checkbox" />
+                <span class="label">Sync other panels to this view</span>
+              </label>
+              <button id="btnPlay-kp-smpl" type="button">Pause</button>
+              <label class="row">
+                <span class="label">Frame</span>
+                <input id="slider-kp-smpl" type="range" min="0" max="0" step="1" value="0" />
+                <span class="value" id="frameText-kp-smpl">0/0</span>
+              </label>
+            </div>
+          </article>
+
           <article class="viz-card" data-side="left">
             <div class="viz-card-head">
               <h3 class="viz-card-title">Learned token assignment</h3>
@@ -201,26 +221,6 @@
               </label>
             </div>
           </article>
-
-          <article class="viz-card" data-side="kp">
-            <div class="viz-card-head">
-              <h3 class="viz-card-title">Keypoints (input)</h3>
-              <span class="viz-card-meta" id="status-kp-smpl">Loading…</span>
-            </div>
-            <div class="viewer viewer--kp" id="viewer-kp-smpl"></div>
-            <div class="controls">
-              <label class="row row--checkbox">
-                <input id="sync-follow-kp-smpl" type="checkbox" />
-                <span class="label">Sync other panels to this view</span>
-              </label>
-              <button id="btnPlay-kp-smpl" type="button">Pause</button>
-              <label class="row">
-                <span class="label">Frame</span>
-                <input id="slider-kp-smpl" type="range" min="0" max="0" step="1" value="0" />
-                <span class="value" id="frameText-kp-smpl">0/0</span>
-              </label>
-            </div>
-          </article>
         </div>
 
         <h3 class="viz-subsection-title">Double stretch (soft / deformable)</h3>
@@ -230,6 +230,26 @@
         </p>
 
         <div class="viz-grid viz-grid--cols3">
+          <article class="viz-card" data-side="kp">
+            <div class="viz-card-head">
+              <h3 class="viz-card-title">Keypoints (input)</h3>
+              <span class="viz-card-meta" id="status-kp-double">Loading…</span>
+            </div>
+            <div class="viewer viewer--kp" id="viewer-kp-double"></div>
+            <div class="controls">
+              <label class="row row--checkbox">
+                <input id="sync-follow-kp-double" type="checkbox" />
+                <span class="label">Sync other panels to this view</span>
+              </label>
+              <button id="btnPlay-kp-double" type="button">Pause</button>
+              <label class="row">
+                <span class="label">Frame</span>
+                <input id="slider-kp-double" type="range" min="0" max="0" step="1" value="0" />
+                <span class="value" id="frameText-kp-double">0/0</span>
+              </label>
+            </div>
+          </article>
+
           <article class="viz-card" data-side="left">
             <div class="viz-card-head">
               <h3 class="viz-card-title">Learned token assignment</h3>
@@ -260,26 +280,6 @@
                 <span class="label">Frame</span>
                 <input id="slider-double-right" type="range" min="0" max="0" step="1" value="0" />
                 <span class="value" id="frameText-double-right">0/0</span>
-              </label>
-            </div>
-          </article>
-
-          <article class="viz-card" data-side="kp">
-            <div class="viz-card-head">
-              <h3 class="viz-card-title">Keypoints (input)</h3>
-              <span class="viz-card-meta" id="status-kp-double">Loading…</span>
-            </div>
-            <div class="viewer viewer--kp" id="viewer-kp-double"></div>
-            <div class="controls">
-              <label class="row row--checkbox">
-                <input id="sync-follow-kp-double" type="checkbox" />
-                <span class="label">Sync other panels to this view</span>
-              </label>
-              <button id="btnPlay-kp-double" type="button">Pause</button>
-              <label class="row">
-                <span class="label">Frame</span>
-                <input id="slider-kp-double" type="range" min="0" max="0" step="1" value="0" />
-                <span class="value" id="frameText-kp-double">0/0</span>
               </label>
             </div>
           </article>
