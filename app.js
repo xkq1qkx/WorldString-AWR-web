@@ -190,7 +190,7 @@ async function initViewer(opts) {
   updateRangeUI(0, frameCount);
 
   const scene = new THREE.Scene();
-  scene.background = new THREE.Color(0.07, 0.08, 0.1);
+  scene.background = new THREE.Color(0.96, 0.97, 0.98);
 
   // Narrower FOV + closer eye = larger subject; optional scale pulls camera back for dense / large AABB scenes.
   const initialFov = opts.initialFov ?? 40;
