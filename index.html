@@ -27,6 +27,25 @@
         </p>
       </header>
 
+      <section class="paper-figure-section" aria-labelledby="teaser-heading">
+        <h2 id="teaser-heading" class="section-title">Teaser figure</h2>
+        <p class="section-lead">
+          Qualitative overview: WorldString models diverse articulated motion from keypoint-conditioned state,
+          producing structured geometry and point-level predictions.
+        </p>
+        <figure class="paper-figure-wrap">
+          <img
+            class="paper-figure-img"
+            src="./teaser3.png"
+            alt="Teaser figure: temporal sequences of human body and hand shapes with colored meshes, reference silhouettes, and point tracks along a WorldString timeline."
+            width="4377"
+            height="1686"
+            decoding="async"
+          />
+          <figcaption class="paper-figure-caption">Teaser figure (high-resolution PNG).</figcaption>
+        </figure>
+      </section>
+
       <section class="paper-blurb" aria-labelledby="abstract-heading">
         <h2 id="abstract-heading" class="blurb-heading">Abstract</h2>
         <p class="blurb-text">
@@ -64,6 +83,27 @@
             negatives).
           </li>
         </ul>
+      </section>
+
+      <section class="paper-figure-section paper-figure-section--method" aria-labelledby="method-fig-heading">
+        <h2 id="method-fig-heading" class="section-title">Network architecture</h2>
+        <p class="section-lead">
+          Differentiable three-stage design: <strong>State Transformer</strong> maps keypoint state to latent geometry,
+          <strong>Object Transformer</strong> refines global structure, and <strong>Voxel Transformer</strong> decodes
+          occupancy from spatial queries.
+        </p>
+        <figure class="paper-figure-wrap">
+          <img
+            class="paper-figure-img"
+            src="./awr_method1.png"
+            alt="WorldString architecture diagram: State Transformer, Object Transformer, and Voxel Transformer with latent cubes, skeleton, and voxel output."
+            width="4386"
+            height="861"
+            loading="lazy"
+            decoding="async"
+          />
+          <figcaption class="paper-figure-caption">Overview of the WorldString pipeline (high-resolution PNG).</figcaption>
+        </figure>
       </section>
 
       <section class="viz-section" aria-labelledby="viz-heading">

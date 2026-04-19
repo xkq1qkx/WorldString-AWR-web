@@ -30,7 +30,7 @@ body {
   width: 100%;
   max-width: min(1600px, 100%);
   margin: 0 auto;
-  padding: 5rem clamp(7rem, 20vw, 16rem) 6rem;
+  padding: 5rem clamp(6rem, 18vw, 15rem) 6rem;
   box-sizing: border-box;
 }
 
@@ -154,6 +154,34 @@ body {
   max-width: 100%;
   width: 100%;
   font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.paper-figure-section {
+  width: 100%;
+  max-width: 100%;
+  margin-bottom: 2.5rem;
+}
+
+.paper-figure-section .section-lead strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.paper-figure-wrap {
+  margin: 0;
+  max-width: 100%;
+}
+
+.paper-figure-img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.paper-figure-caption {
+  margin: 0.5rem 0 0;
+  font-size: 0.82rem;
   color: var(--muted);
 }
 
