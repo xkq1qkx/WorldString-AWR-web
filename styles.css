@@ -30,7 +30,7 @@ body {
   width: 100%;
   max-width: min(1600px, 100%);
   margin: 0 auto;
-  padding: 5rem clamp(6rem, 18vw, 15rem) 6rem;
+  padding: 5rem clamp(5rem, 15vw, 13rem) 6rem;
   box-sizing: border-box;
 }
 
@@ -306,13 +306,13 @@ body {
 
 .viz-card-title {
   margin: 0;
-  font-size: 0.95rem;
+  font-size: 0.7rem;
   font-weight: 600;
   letter-spacing: 0.02em;
 }
 
 .viz-card-meta {
-  font-size: 0.78rem;
+  font-size: 0.55rem;
   color: var(--muted);
   text-align: right;
   max-width: 55%;
@@ -351,14 +351,14 @@ body {
   flex-wrap: wrap;
   gap: 0.65rem 1rem;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
 }
 
 .row {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  flex: 1;
+  flex: 1 1 220px;
   min-width: 0;
 }
 
@@ -380,9 +380,10 @@ body {
 
 .value {
   font-size: 0.8rem;
-  min-width: 3.5rem;
+  min-width: 4.5rem;
   text-align: right;
   color: var(--muted);
+  flex: 0 0 auto;
 }
 
 input[type="range"] {

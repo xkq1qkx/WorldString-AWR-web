@@ -27,22 +27,32 @@
         </p>
       </header>
 
-      <section class="paper-figure-section" aria-labelledby="teaser-heading">
-        <h2 id="teaser-heading" class="section-title">Teaser figure</h2>
+      <section class="pipeline-section" aria-labelledby="pipeline-heading">
+        <h2 id="pipeline-heading" class="section-title">Real Object Data Pipeline</h2>
         <p class="section-lead">
-          Qualitative overview: WorldString models diverse articulated motion from keypoint-conditioned state,
-          producing structured geometry and point-level predictions.
+          Pipeline overview for collecting and processing real object data used in WorldString training and
+          evaluation.
         </p>
-        <figure class="paper-figure-wrap">
-          <img
-            class="paper-figure-img"
-            src="./teaser3.png"
-            alt="Teaser figure: temporal sequences of human body and hand shapes with colored meshes, reference silhouettes, and point tracks along a WorldString timeline."
-            width="4377"
-            height="1686"
-            decoding="async"
-          />
-          <figcaption class="paper-figure-caption">Teaser figure (high-resolution PNG).</figcaption>
+        <figure class="pipeline-video-wrap">
+          <video class="pipeline-video" controls autoplay muted loop playsinline preload="metadata">
+            <source src="./real_data_gen_pipeline.mov" />
+            Your browser does not support the video tag.
+          </video>
+          <figcaption class="pipeline-caption">Real object data processing pipeline.</figcaption>
+        </figure>
+      </section>
+
+      <section class="pipeline-section" aria-labelledby="sim-pipeline-heading">
+        <h2 id="sim-pipeline-heading" class="section-title">Simulated Data Generation Pipeline</h2>
+        <p class="section-lead">
+          Overview of how simulated object data is generated for WorldString training and experiments.
+        </p>
+        <figure class="pipeline-video-wrap">
+          <video class="pipeline-video" controls autoplay muted loop playsinline preload="metadata">
+            <source src="./sim_data_gen_pipeline.mov" />
+            Your browser does not support the video tag.
+          </video>
+          <figcaption class="pipeline-caption">Simulated data generation pipeline.</figcaption>
         </figure>
       </section>
 
@@ -83,27 +93,6 @@
             negatives).
           </li>
         </ul>
-      </section>
-
-      <section class="paper-figure-section paper-figure-section--method" aria-labelledby="method-fig-heading">
-        <h2 id="method-fig-heading" class="section-title">Network architecture</h2>
-        <p class="section-lead">
-          Differentiable three-stage design: <strong>State Transformer</strong> maps keypoint state to latent geometry,
-          <strong>Object Transformer</strong> refines global structure, and <strong>Voxel Transformer</strong> decodes
-          occupancy from spatial queries.
-        </p>
-        <figure class="paper-figure-wrap">
-          <img
-            class="paper-figure-img"
-            src="./awr_method1.png"
-            alt="WorldString architecture diagram: State Transformer, Object Transformer, and Voxel Transformer with latent cubes, skeleton, and voxel output."
-            width="4386"
-            height="861"
-            loading="lazy"
-            decoding="async"
-          />
-          <figcaption class="paper-figure-caption">Overview of the WorldString pipeline (high-resolution PNG).</figcaption>
-        </figure>
       </section>
 
       <section class="viz-section" aria-labelledby="viz-heading">
@@ -304,32 +293,42 @@
         </p>
       </section>
 
-      <section class="pipeline-section" aria-labelledby="pipeline-heading">
-        <h2 id="pipeline-heading" class="section-title">Real Object Data Pipeline</h2>
+      <section class="paper-figure-section paper-figure-section--method" aria-labelledby="method-fig-heading">
+        <h2 id="method-fig-heading" class="section-title">Network architecture</h2>
         <p class="section-lead">
-          Pipeline overview for collecting and processing real object data used in WorldString training and
-          evaluation.
+          Differentiable three-stage design: <strong>State Transformer</strong> maps keypoint state to latent geometry,
+          <strong>Object Transformer</strong> refines global structure, and <strong>Voxel Transformer</strong> decodes
+          occupancy from spatial queries.
         </p>
-        <figure class="pipeline-video-wrap">
-          <video class="pipeline-video" controls autoplay muted loop playsinline preload="metadata">
-            <source src="./real_data_gen_pipeline.mov" />
-            Your browser does not support the video tag.
-          </video>
-          <figcaption class="pipeline-caption">Real object data processing pipeline.</figcaption>
+        <figure class="paper-figure-wrap">
+          <img
+            class="paper-figure-img"
+            src="./awr_method1.png"
+            alt="WorldString architecture diagram: State Transformer, Object Transformer, and Voxel Transformer with latent cubes, skeleton, and voxel output."
+            width="4386"
+            height="861"
+            loading="lazy"
+            decoding="async"
+          />
+          <figcaption class="paper-figure-caption">Overview of the WorldString pipeline (high-resolution PNG).</figcaption>
         </figure>
       </section>
 
-      <section class="pipeline-section" aria-labelledby="sim-pipeline-heading">
-        <h2 id="sim-pipeline-heading" class="section-title">Simulated Data Generation Pipeline</h2>
+      <section class="paper-figure-section">
         <p class="section-lead">
-          Overview of how simulated object data is generated for WorldString training and experiments.
+          Qualitative overview: WorldString models diverse articulated motion from keypoint-conditioned state,
+          producing structured geometry and point-level predictions.
         </p>
-        <figure class="pipeline-video-wrap">
-          <video class="pipeline-video" controls autoplay muted loop playsinline preload="metadata">
-            <source src="./sim_data_gen_pipeline.mov" />
-            Your browser does not support the video tag.
-          </video>
-          <figcaption class="pipeline-caption">Simulated data generation pipeline.</figcaption>
+        <figure class="paper-figure-wrap">
+          <img
+            class="paper-figure-img"
+            src="./teaser3.png"
+            alt="Teaser figure: temporal sequences of human body and hand shapes with colored meshes, reference silhouettes, and point tracks along a WorldString timeline."
+            width="4377"
+            height="1686"
+            decoding="async"
+          />
+          <figcaption class="paper-figure-caption">Teaser figure (high-resolution PNG).</figcaption>
         </figure>
       </section>
 
