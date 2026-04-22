@@ -264,6 +264,72 @@
         </p>
       </section>
 
+      <section class="viz-section" aria-labelledby="train-process-heading">
+        <h2 id="train-process-heading" class="section-title">Training Process Visualization</h2>
+        <p class="section-lead">
+          Training snapshots from <code>training_process_visual</code> and <code>visual_h1_process</code>, downsampled
+          for web playback and shown with the same interactive controls.
+        </p>
+
+        <h3 class="viz-subsection-title">Go2</h3>
+        <div class="viz-grid viz-grid--cols2">
+          <article class="viz-card">
+            <div class="viz-card-head">
+              <h3 class="viz-card-title">Go2 training process (point cloud)</h3>
+              <span class="viz-card-meta" id="status-train-process">Loading…</span>
+            </div>
+            <div class="viewer" id="viewer-train-process"></div>
+            <div class="controls">
+              <button id="btnPlay-train-process" type="button">Pause</button>
+              <label class="row">
+                <span class="label">Frame</span>
+                <input id="slider-train-process" type="range" min="0" max="0" step="1" value="0" />
+                <span class="value" id="frameText-train-process">0/0</span>
+              </label>
+            </div>
+          </article>
+
+          <article class="viz-card">
+            <div class="viz-card-head">
+              <h3 class="viz-card-title">Go2 multi-pose</h3>
+            </div>
+            <video class="inline-video" controls autoplay muted loop playsinline preload="metadata">
+              <source src="./go2_multipose.mp4" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+          </article>
+        </div>
+
+        <h3 class="viz-subsection-title">H1</h3>
+        <div class="viz-grid viz-grid--cols2">
+          <article class="viz-card">
+            <div class="viz-card-head">
+              <h3 class="viz-card-title">H1 training process (point cloud)</h3>
+              <span class="viz-card-meta" id="status-train-process-h1">Loading…</span>
+            </div>
+            <div class="viewer" id="viewer-train-process-h1"></div>
+            <div class="controls">
+              <button id="btnPlay-train-process-h1" type="button">Pause</button>
+              <label class="row">
+                <span class="label">Frame</span>
+                <input id="slider-train-process-h1" type="range" min="0" max="0" step="1" value="0" />
+                <span class="value" id="frameText-train-process-h1">0/0</span>
+              </label>
+            </div>
+          </article>
+
+          <article class="viz-card">
+            <div class="viz-card-head">
+              <h3 class="viz-card-title">H1 multi-pose</h3>
+            </div>
+            <video class="inline-video" controls autoplay muted loop playsinline preload="metadata">
+              <source src="./h1_multipose.mp4" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+          </article>
+        </div>
+      </section>
+
       <section class="pipeline-section" aria-labelledby="pipeline-heading">
         <h2 id="pipeline-heading" class="section-title">Real Object Data Pipeline</h2>
         <p class="section-lead">

@@ -11,6 +11,8 @@ const runDoubleRight = params.get("runDoubleRight") || "web_double_stretch_run_0
 const runKpHand = params.get("runKpHand") || "run_002_kp";
 const runKpSmpl = params.get("runKpSmpl") || "smpl_run_003_kp";
 const runKpDouble = params.get("runKpDouble") || "web_double_stretch_run_001_kp";
+const runTrainProcess = params.get("runTrainProcess") || "training_process_visual_web";
+const runTrainProcessH1 = params.get("runTrainProcessH1") || "visual_h1_process_web";
 // Keypoint sphere radii are code-controlled constants (not URL-overridable).
 const kpSphereHand = 0.005;
 const kpSphereSmpl = 0.015;
@@ -590,6 +592,8 @@ async function main() {
     vKpHand,
     vKpSmpl,
     vKpDouble,
+    vTrainProcess,
+    vTrainProcessH1,
   ] = await Promise.all([
     initViewer({
       containerId: "viewer-left",
@@ -687,6 +691,28 @@ async function main() {
       sphereRadiusScale: kpSphereDouble,
       alignFramingRunDir: runDoubleLeft,
     }),
+    initViewer({
+      containerId: "viewer-train-process",
+      runDir: runTrainProcess,
+      statusId: "status-train-process",
+      sliderId: "slider-train-process",
+      frameTextId: "frameText-train-process",
+      btnPlayId: "btnPlay-train-process",
+      softenErrorColors: true,
+      initialFov: 42,
+      cameraDistanceScale: 1.0,
+    }),
+    initViewer({
+      containerId: "viewer-train-process-h1",
+      runDir: runTrainProcessH1,
+      statusId: "status-train-process-h1",
+      sliderId: "slider-train-process-h1",
+      frameTextId: "frameText-train-process-h1",
+      btnPlayId: "btnPlay-train-process-h1",
+      softenErrorColors: true,
+      initialFov: 42,
+      cameraDistanceScale: 1.0,
+    }),
   ]);
 
   wireKpFollow(vKpHand, [vLeft, vRight], document.getElementById("sync-follow-kp-hand"), {
@@ -726,6 +752,8 @@ async function main() {
     vKpHand.copyCameraFrom(vLeft);
     vKpSmpl.copyCameraFrom(vSmplLeft);
     vKpDouble.copyCameraFrom(vDoubleLeft);
+    vTrainProcess.copyCameraFrom(vLeft);
+    vTrainProcessH1.copyCameraFrom(vLeft);
   });
 }
 
@@ -742,6 +770,8 @@ main().catch((err) => {
     "status-kp-hand",
     "status-kp-smpl",
     "status-kp-double",
+    "status-train-process",
+    "status-train-process-h1",
   ]) {
     const el = document.getElementById(id);
     if (el) el.textContent = msg;

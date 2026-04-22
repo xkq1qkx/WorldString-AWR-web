@@ -344,6 +344,13 @@ body {
   display: block;
 }
 
+.inline-video {
+  width: 100%;
+  height: auto;
+  display: block;
+  background: var(--bg);
+}
+
 .controls {
   padding: 0.65rem 1rem 1rem;
   border-top: 1px solid var(--border);
