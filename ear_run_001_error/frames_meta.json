@@ -1,0 +1,289 @@
+{
+  "version": 1,
+  "fps": 10.0,
+  "frameCount": 55,
+  "nPointsMax": 30938,
+  "center": [
+    67.02408757114122,
+    53.85758299444638,
+    53.283195588148786
+  ],
+  "radius": 84.22291849609583,
+  "frames": [
+    {
+      "idx": 1,
+      "bin": "frame_00001.bin",
+      "nPoints": 28941
+    },
+    {
+      "idx": 2,
+      "bin": "frame_00002.bin",
+      "nPoints": 28960
+    },
+    {
+      "idx": 3,
+      "bin": "frame_00003.bin",
+      "nPoints": 28608
+    },
+    {
+      "idx": 4,
+      "bin": "frame_00004.bin",
+      "nPoints": 28393
+    },
+    {
+      "idx": 5,
+      "bin": "frame_00005.bin",
+      "nPoints": 28655
+    },
+    {
+      "idx": 6,
+      "bin": "frame_00006.bin",
+      "nPoints": 28973
+    },
+    {
+      "idx": 7,
+      "bin": "frame_00007.bin",
+      "nPoints": 28279
+    },
+    {
+      "idx": 8,
+      "bin": "frame_00008.bin",
+      "nPoints": 29149
+    },
+    {
+      "idx": 9,
+      "bin": "frame_00009.bin",
+      "nPoints": 28522
+    },
+    {
+      "idx": 11,
+      "bin": "frame_00011.bin",
+      "nPoints": 29056
+    },
+    {
+      "idx": 12,
+      "bin": "frame_00012.bin",
+      "nPoints": 28808
+    },
+    {
+      "idx": 13,
+      "bin": "frame_00013.bin",
+      "nPoints": 27922
+    },
+    {
+      "idx": 14,
+      "bin": "frame_00014.bin",
+      "nPoints": 28337
+    },
+    {
+      "idx": 15,
+      "bin": "frame_00015.bin",
+      "nPoints": 28648
+    },
+    {
+      "idx": 16,
+      "bin": "frame_00016.bin",
+      "nPoints": 28422
+    },
+    {
+      "idx": 17,
+      "bin": "frame_00017.bin",
+      "nPoints": 28572
+    },
+    {
+      "idx": 18,
+      "bin": "frame_00018.bin",
+      "nPoints": 28676
+    },
+    {
+      "idx": 19,
+      "bin": "frame_00019.bin",
+      "nPoints": 28341
+    },
+    {
+      "idx": 21,
+      "bin": "frame_00021.bin",
+      "nPoints": 29073
+    },
+    {
+      "idx": 22,
+      "bin": "frame_00022.bin",
+      "nPoints": 28438
+    },
+    {
+      "idx": 23,
+      "bin": "frame_00023.bin",
+      "nPoints": 28838
+    },
+    {
+      "idx": 24,
+      "bin": "frame_00024.bin",
+      "nPoints": 30095
+    },
+    {
+      "idx": 25,
+      "bin": "frame_00025.bin",
+      "nPoints": 27986
+    },
+    {
+      "idx": 26,
+      "bin": "frame_00026.bin",
+      "nPoints": 28134
+    },
+    {
+      "idx": 27,
+      "bin": "frame_00027.bin",
+      "nPoints": 28965
+    },
+    {
+      "idx": 28,
+      "bin": "frame_00028.bin",
+      "nPoints": 29703
+    },
+    {
+      "idx": 29,
+      "bin": "frame_00029.bin",
+      "nPoints": 29749
+    },
+    {
+      "idx": 31,
+      "bin": "frame_00031.bin",
+      "nPoints": 29304
+    },
+    {
+      "idx": 32,
+      "bin": "frame_00032.bin",
+      "nPoints": 30027
+    },
+    {
+      "idx": 33,
+      "bin": "frame_00033.bin",
+      "nPoints": 29157
+    },
+    {
+      "idx": 34,
+      "bin": "frame_00034.bin",
+      "nPoints": 29355
+    },
+    {
+      "idx": 35,
+      "bin": "frame_00035.bin",
+      "nPoints": 29444
+    },
+    {
+      "idx": 36,
+      "bin": "frame_00036.bin",
+      "nPoints": 29542
+    },
+    {
+      "idx": 37,
+      "bin": "frame_00037.bin",
+      "nPoints": 29327
+    },
+    {
+      "idx": 38,
+      "bin": "frame_00038.bin",
+      "nPoints": 29198
+    },
+    {
+      "idx": 39,
+      "bin": "frame_00039.bin",
+      "nPoints": 28973
+    },
+    {
+      "idx": 41,
+      "bin": "frame_00041.bin",
+      "nPoints": 29943
+    },
+    {
+      "idx": 42,
+      "bin": "frame_00042.bin",
+      "nPoints": 29848
+    },
+    {
+      "idx": 43,
+      "bin": "frame_00043.bin",
+      "nPoints": 29482
+    },
+    {
+      "idx": 44,
+      "bin": "frame_00044.bin",
+      "nPoints": 30226
+    },
+    {
+      "idx": 45,
+      "bin": "frame_00045.bin",
+      "nPoints": 30938
+    },
+    {
+      "idx": 46,
+      "bin": "frame_00046.bin",
+      "nPoints": 29949
+    },
+    {
+      "idx": 47,
+      "bin": "frame_00047.bin",
+      "nPoints": 29068
+    },
+    {
+      "idx": 48,
+      "bin": "frame_00048.bin",
+      "nPoints": 29465
+    },
+    {
+      "idx": 49,
+      "bin": "frame_00049.bin",
+      "nPoints": 29746
+    },
+    {
+      "idx": 51,
+      "bin": "frame_00051.bin",
+      "nPoints": 28544
+    },
+    {
+      "idx": 52,
+      "bin": "frame_00052.bin",
+      "nPoints": 28614
+    },
+    {
+      "idx": 53,
+      "bin": "frame_00053.bin",
+      "nPoints": 28824
+    },
+    {
+      "idx": 54,
+      "bin": "frame_00054.bin",
+      "nPoints": 29152
+    },
+    {
+      "idx": 55,
+      "bin": "frame_00055.bin",
+      "nPoints": 28535
+    },
+    {
+      "idx": 56,
+      "bin": "frame_00056.bin",
+      "nPoints": 29053
+    },
+    {
+      "idx": 57,
+      "bin": "frame_00057.bin",
+      "nPoints": 28615
+    },
+    {
+      "idx": 58,
+      "bin": "frame_00058.bin",
+      "nPoints": 29293
+    },
+    {
+      "idx": 59,
+      "bin": "frame_00059.bin",
+      "nPoints": 29361
+    },
+    {
+      "idx": 61,
+      "bin": "frame_00061.bin",
+      "nPoints": 28652
+    }
+  ]
+}

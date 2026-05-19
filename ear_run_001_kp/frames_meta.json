@@ -1,0 +1,294 @@
+{
+  "version": 1,
+  "fps": 10.0,
+  "frameCount": 55,
+  "nPointsMax": 20,
+  "center": [
+    66.94657645102993,
+    53.87664144972426,
+    53.37620191996939
+  ],
+  "radius": 71.50334284653849,
+  "kind": "keypoints",
+  "coordSpace": "normalized",
+  "voxelSize": 128.0,
+  "jointScale": null,
+  "centerMode": "shape_subtract",
+  "frames": [
+    {
+      "idx": 1,
+      "bin": "frame_00001.bin",
+      "nPoints": 20
+    },
+    {
+      "idx": 2,
+      "bin": "frame_00002.bin",
+      "nPoints": 20
+    },
+    {
+      "idx": 3,
+      "bin": "frame_00003.bin",
+      "nPoints": 20
+    },
+    {
+      "idx": 4,
+      "bin": "frame_00004.bin",
+      "nPoints": 20
+    },
+    {
+      "idx": 5,
+      "bin": "frame_00005.bin",
+      "nPoints": 20
+    },
+    {
+      "idx": 6,
+      "bin": "frame_00006.bin",
+      "nPoints": 20
+    },
+    {
+      "idx": 7,
+      "bin": "frame_00007.bin",
+      "nPoints": 20
+    },
+    {
+      "idx": 8,
+      "bin": "frame_00008.bin",
+      "nPoints": 20
+    },
+    {
+      "idx": 9,
+      "bin": "frame_00009.bin",
+      "nPoints": 20
+    },
+    {
+      "idx": 11,
+      "bin": "frame_00011.bin",
+      "nPoints": 20
+    },
+    {
+      "idx": 12,
+      "bin": "frame_00012.bin",
+      "nPoints": 20
+    },
+    {
+      "idx": 13,
+      "bin": "frame_00013.bin",
+      "nPoints": 20
+    },
+    {
+      "idx": 14,
+      "bin": "frame_00014.bin",
+      "nPoints": 20
+    },
+    {
+      "idx": 15,
+      "bin": "frame_00015.bin",
+      "nPoints": 20
+    },
+    {
+      "idx": 16,
+      "bin": "frame_00016.bin",
+      "nPoints": 20
+    },
+    {
+      "idx": 17,
+      "bin": "frame_00017.bin",
+      "nPoints": 20
+    },
+    {
+      "idx": 18,
+      "bin": "frame_00018.bin",
+      "nPoints": 20
+    },
+    {
+      "idx": 19,
+      "bin": "frame_00019.bin",
+      "nPoints": 20
+    },
+    {
+      "idx": 21,
+      "bin": "frame_00021.bin",
+      "nPoints": 20
+    },
+    {
+      "idx": 22,
+      "bin": "frame_00022.bin",
+      "nPoints": 20
+    },
+    {
+      "idx": 23,
+      "bin": "frame_00023.bin",
+      "nPoints": 20
+    },
+    {
+      "idx": 24,
+      "bin": "frame_00024.bin",
+      "nPoints": 20
+    },
+    {
+      "idx": 25,
+      "bin": "frame_00025.bin",
+      "nPoints": 20
+    },
+    {
+      "idx": 26,
+      "bin": "frame_00026.bin",
+      "nPoints": 20
+    },
+    {
+      "idx": 27,
+      "bin": "frame_00027.bin",
+      "nPoints": 20
+    },
+    {
+      "idx": 28,
+      "bin": "frame_00028.bin",
+      "nPoints": 20
+    },
+    {
+      "idx": 29,
+      "bin": "frame_00029.bin",
+      "nPoints": 20
+    },
+    {
+      "idx": 31,
+      "bin": "frame_00031.bin",
+      "nPoints": 20
+    },
+    {
+      "idx": 32,
+      "bin": "frame_00032.bin",
+      "nPoints": 20
+    },
+    {
+      "idx": 33,
+      "bin": "frame_00033.bin",
+      "nPoints": 20
+    },
+    {
+      "idx": 34,
+      "bin": "frame_00034.bin",
+      "nPoints": 20
+    },
+    {
+      "idx": 35,
+      "bin": "frame_00035.bin",
+      "nPoints": 20
+    },
+    {
+      "idx": 36,
+      "bin": "frame_00036.bin",
+      "nPoints": 20
+    },
+    {
+      "idx": 37,
+      "bin": "frame_00037.bin",
+      "nPoints": 20
+    },
+    {
+      "idx": 38,
+      "bin": "frame_00038.bin",
+      "nPoints": 20
+    },
+    {
+      "idx": 39,
+      "bin": "frame_00039.bin",
+      "nPoints": 20
+    },
+    {
+      "idx": 41,
+      "bin": "frame_00041.bin",
+      "nPoints": 20
+    },
+    {
+      "idx": 42,
+      "bin": "frame_00042.bin",
+      "nPoints": 20
+    },
+    {
+      "idx": 43,
+      "bin": "frame_00043.bin",
+      "nPoints": 20
+    },
+    {
+      "idx": 44,
+      "bin": "frame_00044.bin",
+      "nPoints": 20
+    },
+    {
+      "idx": 45,
+      "bin": "frame_00045.bin",
+      "nPoints": 20
+    },
+    {
+      "idx": 46,
+      "bin": "frame_00046.bin",
+      "nPoints": 20
+    },
+    {
+      "idx": 47,
+      "bin": "frame_00047.bin",
+      "nPoints": 20
+    },
+    {
+      "idx": 48,
+      "bin": "frame_00048.bin",
+      "nPoints": 20
+    },
+    {
+      "idx": 49,
+      "bin": "frame_00049.bin",
+      "nPoints": 20
+    },
+    {
+      "idx": 51,
+      "bin": "frame_00051.bin",
+      "nPoints": 20
+    },
+    {
+      "idx": 52,
+      "bin": "frame_00052.bin",
+      "nPoints": 20
+    },
+    {
+      "idx": 53,
+      "bin": "frame_00053.bin",
+      "nPoints": 20
+    },
+    {
+      "idx": 54,
+      "bin": "frame_00054.bin",
+      "nPoints": 20
+    },
+    {
+      "idx": 55,
+      "bin": "frame_00055.bin",
+      "nPoints": 20
+    },
+    {
+      "idx": 56,
+      "bin": "frame_00056.bin",
+      "nPoints": 20
+    },
+    {
+      "idx": 57,
+      "bin": "frame_00057.bin",
+      "nPoints": 20
+    },
+    {
+      "idx": 58,
+      "bin": "frame_00058.bin",
+      "nPoints": 20
+    },
+    {
+      "idx": 59,
+      "bin": "frame_00059.bin",
+      "nPoints": 20
+    },
+    {
+      "idx": 61,
+      "bin": "frame_00061.bin",
+      "nPoints": 20
+    }
+  ]
+}

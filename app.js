@@ -11,12 +11,49 @@ const runDoubleRight = params.get("runDoubleRight") || "web_double_stretch_run_0
 const runKpHand = params.get("runKpHand") || "run_002_kp";
 const runKpSmpl = params.get("runKpSmpl") || "smpl_run_003_kp";
 const runKpDouble = params.get("runKpDouble") || "web_double_stretch_run_001_kp";
+const runEarLeft = params.get("runEarLeft") || "ear_run_001";
+const runEarRight = params.get("runEarRight") || "ear_run_001_error";
+const runKpEar = params.get("runKpEar") || "ear_run_001_kp";
+const runGo2Left = params.get("runGo2Left") || "go2_run_004";
+const runGo2Right = params.get("runGo2Right") || "go2_run_004_error";
+const runKpGo2 = params.get("runKpGo2") || "go2_run_004_kp";
 const runTrainProcess = params.get("runTrainProcess") || "training_process_visual_web";
 const runTrainProcessH1 = params.get("runTrainProcessH1") || "visual_h1_process_web";
 // Keypoint sphere radii are code-controlled constants (not URL-overridable).
 const kpSphereHand = 0.005;
 const kpSphereSmpl = 0.015;
 const kpSphereDouble = 0.031;
+const kpSphereEar = 0.031;
+const kpSphereGo2 = 0.005;
+
+/** Max concurrent frame .bin fetches across all viewers on the page. */
+const GLOBAL_FRAME_FETCH_CONCURRENCY = 8;
+/** Per-viewer prefetch worker count (actual network capped globally). */
+const PER_VIEWER_PREFETCH_WORKERS = 2;
+
+let globalFrameFetchActive = 0;
+const globalFrameFetchQueue = [];
+
+function pumpGlobalFrameFetch() {
+  while (globalFrameFetchActive < GLOBAL_FRAME_FETCH_CONCURRENCY && globalFrameFetchQueue.length) {
+    const job = globalFrameFetchQueue.shift();
+    globalFrameFetchActive += 1;
+    Promise.resolve()
+      .then(job.task)
+      .then(job.resolve, job.reject)
+      .finally(() => {
+        globalFrameFetchActive -= 1;
+        pumpGlobalFrameFetch();
+      });
+  }
+}
+
+function runGlobalFrameFetch(task) {
+  return new Promise((resolve, reject) => {
+    globalFrameFetchQueue.push({ task, resolve, reject });
+    pumpGlobalFrameFetch();
+  });
+}
 
 async function loadMeta(runDir) {
   const metaUrl = `${runDir}/frames_meta.json`;
@@ -84,22 +121,22 @@ function createFrameLoader(meta, framesBaseUrl) {
     if (inflight.has(i)) return inflight.get(i);
     const f = meta.frames[i];
     const url = `${framesBaseUrl}${f.bin}`;
-    const p = fetch(url, { cache: "default" })
-      .then((res) => {
+    const p = runGlobalFrameFetch(() =>
+      fetch(url, { cache: "default" }).then((res) => {
         if (!res.ok) throw new Error(`Failed to load frame ${i}: ${url}`);
         return res.arrayBuffer();
       })
-      .then((ab) => {
-        buffers[i] = ab;
-        inflight.delete(i);
-        return ab;
-      });
+    ).then((ab) => {
+      buffers[i] = ab;
+      inflight.delete(i);
+      return ab;
+    });
     inflight.set(i, p);
     return p;
   }
 
   /** Prefetch all missing frames in the background (does not need to be awaited). */
-  function prefetchAll(setStatus, concurrency = 6) {
+  function prefetchAll(setStatus, concurrency = PER_VIEWER_PREFETCH_WORKERS) {
     const pending = [];
     for (let i = 0; i < nFrames; i++) {
       if (!buffers[i]) pending.push(i);
@@ -153,6 +190,9 @@ async function initViewer(opts) {
   const btnPlayEl = document.getElementById(opts.btnPlayId);
 
   if (!viewerEl) throw new Error(`Missing #${opts.containerId}`);
+  if (!sliderEl || !frameTextEl || !btnPlayEl) {
+    throw new Error(`Missing controls for #${opts.containerId} (slider/frameText/play button)`);
+  }
 
   const framesBaseUrl = `${opts.runDir}/frames/`;
 
@@ -292,7 +332,7 @@ async function initViewer(opts) {
   const { buffers, loadFrame, prefetchAll } = createFrameLoader(meta, framesBaseUrl);
   await loadFrame(0);
   setStatus("Playing…");
-  prefetchAll(setStatus, 6)
+  prefetchAll(setStatus)
     .then(() => {
       setStatus("Playing…");
     })
@@ -581,199 +621,391 @@ function wireKpFollow(leader, followers, checkbox, followerUi) {
   });
 }
 
-async function main() {
-  const [
-    vLeft,
-    vRight,
-    vSmplLeft,
-    vSmplRight,
-    vDoubleLeft,
-    vDoubleRight,
-    vKpHand,
-    vKpSmpl,
-    vKpDouble,
-    vTrainProcess,
-    vTrainProcessH1,
-  ] = await Promise.all([
-    initViewer({
-      containerId: "viewer-left",
-      runDir: runLeft,
-      statusId: "status-left",
-      sliderId: "slider-left",
-      frameTextId: "frameText-left",
-      btnPlayId: "btnPlay-left",
-      initialFov: 36,
-      cameraDistanceScale: 0.88,
-    }),
-    initViewer({
-      containerId: "viewer-right",
-      runDir: runRight,
-      statusId: "status-right",
-      sliderId: "slider-right",
-      frameTextId: "frameText-right",
-      btnPlayId: "btnPlay-right",
-      softenErrorColors: true,
-      initialFov: 36,
-      cameraDistanceScale: 0.88,
-    }),
-    initViewer({
-      containerId: "viewer-smpl-left",
-      runDir: runSmplLeft,
-      statusId: "status-smpl-left",
-      sliderId: "slider-smpl-left",
-      frameTextId: "frameText-smpl-left",
-      btnPlayId: "btnPlay-smpl-left",
-    }),
-    initViewer({
-      containerId: "viewer-smpl-right",
-      runDir: runSmplRight,
-      statusId: "status-smpl-right",
-      sliderId: "slider-smpl-right",
-      frameTextId: "frameText-smpl-right",
-      btnPlayId: "btnPlay-smpl-right",
-      softenErrorColors: true,
-    }),
-    initViewer({
-      containerId: "viewer-double-left",
-      runDir: runDoubleLeft,
-      statusId: "status-double-left",
-      sliderId: "slider-double-left",
-      frameTextId: "frameText-double-left",
-      btnPlayId: "btnPlay-double-left",
-      initialFov: 55,
-      cameraDistanceScale: 1.5,
-    }),
-    initViewer({
-      containerId: "viewer-double-right",
-      runDir: runDoubleRight,
-      statusId: "status-double-right",
-      sliderId: "slider-double-right",
-      frameTextId: "frameText-double-right",
-      btnPlayId: "btnPlay-double-right",
-      softenErrorColors: true,
-      initialFov: 55,
-      cameraDistanceScale: 1.5,
-    }),
-    initViewer({
-      containerId: "viewer-kp-hand",
-      runDir: runKpHand,
-      statusId: "status-kp-hand",
-      sliderId: "slider-kp-hand",
-      frameTextId: "frameText-kp-hand",
-      btnPlayId: "btnPlay-kp-hand",
-      initialFov: 30,
-      cameraDistanceScale: 0.88,
-      keypointSpheres: true,
-      sphereRadiusScale: kpSphereHand,
-      alignFramingRunDir: runLeft,
-    }),
-    initViewer({
-      containerId: "viewer-kp-smpl",
-      runDir: runKpSmpl,
-      statusId: "status-kp-smpl",
-      sliderId: "slider-kp-smpl",
-      frameTextId: "frameText-kp-smpl",
-      btnPlayId: "btnPlay-kp-smpl",
-      keypointSpheres: true,
-      sphereRadiusScale: kpSphereSmpl,
-      alignFramingRunDir: runSmplLeft,
-    }),
-    initViewer({
-      containerId: "viewer-kp-double",
-      runDir: runKpDouble,
-      statusId: "status-kp-double",
-      sliderId: "slider-kp-double",
-      frameTextId: "frameText-kp-double",
-      btnPlayId: "btnPlay-kp-double",
-      initialFov: 55,
-      cameraDistanceScale: 1.5,
-      keypointSpheres: true,
-      sphereRadiusScale: kpSphereDouble,
-      alignFramingRunDir: runDoubleLeft,
-    }),
-    initViewer({
-      containerId: "viewer-train-process",
-      runDir: runTrainProcess,
-      statusId: "status-train-process",
-      sliderId: "slider-train-process",
-      frameTextId: "frameText-train-process",
-      btnPlayId: "btnPlay-train-process",
-      softenErrorColors: true,
-      initialFov: 42,
-      cameraDistanceScale: 1.0,
-    }),
-    initViewer({
-      containerId: "viewer-train-process-h1",
-      runDir: runTrainProcessH1,
-      statusId: "status-train-process-h1",
-      sliderId: "slider-train-process-h1",
-      frameTextId: "frameText-train-process-h1",
-      btnPlayId: "btnPlay-train-process-h1",
-      softenErrorColors: true,
-      initialFov: 42,
-      cameraDistanceScale: 1.0,
-    }),
-  ]);
+function setStatusError(statusId, err) {
+  const el = document.getElementById(statusId);
+  if (el) el.textContent = `Error: ${err?.message || String(err)}`;
+}
 
-  wireKpFollow(vKpHand, [vLeft, vRight], document.getElementById("sync-follow-kp-hand"), {
-    sliders: [
-      document.getElementById("slider-left"),
-      document.getElementById("slider-right"),
-    ],
-    buttons: [
-      document.getElementById("btnPlay-left"),
-      document.getElementById("btnPlay-right"),
-    ],
-  });
-  wireKpFollow(vKpSmpl, [vSmplLeft, vSmplRight], document.getElementById("sync-follow-kp-smpl"), {
-    sliders: [
-      document.getElementById("slider-smpl-left"),
-      document.getElementById("slider-smpl-right"),
-    ],
-    buttons: [
-      document.getElementById("btnPlay-smpl-left"),
-      document.getElementById("btnPlay-smpl-right"),
-    ],
-  });
-  wireKpFollow(vKpDouble, [vDoubleLeft, vDoubleRight], document.getElementById("sync-follow-kp-double"), {
-    sliders: [
-      document.getElementById("slider-double-left"),
-      document.getElementById("slider-double-right"),
-    ],
-    buttons: [
-      document.getElementById("btnPlay-double-left"),
-      document.getElementById("btnPlay-double-right"),
-    ],
-  });
+async function initViewerTask(opts) {
+  try {
+    return { ok: true, viewer: await initViewer(opts), opts };
+  } catch (err) {
+    console.error(`[${opts.runDir}]`, err);
+    if (opts.statusId) setStatusError(opts.statusId, err);
+    return { ok: false, err, opts };
+  }
+}
 
-  requestAnimationFrame(() => {
-    window.dispatchEvent(new Event("resize"));
-    // Same FOV, distance, and clip planes as the token (shape) panel — not only the same formula.
-    vKpHand.copyCameraFrom(vLeft);
-    vKpSmpl.copyCameraFrom(vSmplLeft);
-    vKpDouble.copyCameraFrom(vDoubleLeft);
-    vTrainProcess.copyCameraFrom(vLeft);
-    vTrainProcessH1.copyCameraFrom(vLeft);
+/** @type {Map<string, object>} */
+const viewerRegistry = new Map();
+
+function registerViewerResult(result) {
+  if (result?.ok) viewerRegistry.set(result.opts.containerId, result.viewer);
+}
+
+function getViewer(containerId) {
+  return viewerRegistry.get(containerId) ?? null;
+}
+
+function setRowPendingStatus(tasks, text = "Scroll to load…") {
+  for (const t of tasks) {
+    if (!t.statusId) continue;
+    const el = document.getElementById(t.statusId);
+    if (el) el.textContent = text;
+  }
+}
+
+function syncKpCameras() {
+  const pairs = [
+    ["viewer-kp-hand", "viewer-left"],
+    ["viewer-kp-smpl", "viewer-smpl-left"],
+    ["viewer-kp-double", "viewer-double-left"],
+    ["viewer-kp-ear", "viewer-ear-left"],
+    ["viewer-kp-go2", "viewer-go2-left"],
+    ["viewer-train-process", "viewer-left"],
+    ["viewer-train-process-h1", "viewer-left"],
+  ];
+  for (const [kpId, shapeId] of pairs) {
+    const kp = getViewer(kpId);
+    const shape = getViewer(shapeId);
+    if (kp && shape) kp.copyCameraFrom(shape);
+  }
+}
+
+function wireKpRow(wire) {
+  const leader = getViewer(wire.leader);
+  const followers = wire.followers.map((id) => getViewer(id));
+  if (!leader || followers.some((f) => !f)) return;
+  const checkbox = document.getElementById(wire.checkboxId);
+  if (!checkbox) return;
+  wireKpFollow(leader, followers, checkbox, {
+    sliders: wire.sliderIds.map((id) => document.getElementById(id)),
+    buttons: wire.buttonIds.map((id) => document.getElementById(id)),
   });
 }
 
-main().catch((err) => {
-  console.error(err);
-  const msg = `Error: ${err?.message || String(err)}`;
-  for (const id of [
-    "status-left",
-    "status-right",
-    "status-smpl-left",
-    "status-smpl-right",
-    "status-double-left",
-    "status-double-right",
-    "status-kp-hand",
-    "status-kp-smpl",
-    "status-kp-double",
-    "status-train-process",
-    "status-train-process-h1",
-  ]) {
-    const el = document.getElementById(id);
-    if (el) el.textContent = msg;
+function buildRowTasks() {
+  return {
+    hand: [
+      {
+        containerId: "viewer-left",
+        runDir: runLeft,
+        statusId: "status-left",
+        sliderId: "slider-left",
+        frameTextId: "frameText-left",
+        btnPlayId: "btnPlay-left",
+        initialFov: 36,
+        cameraDistanceScale: 0.88,
+      },
+      {
+        containerId: "viewer-right",
+        runDir: runRight,
+        statusId: "status-right",
+        sliderId: "slider-right",
+        frameTextId: "frameText-right",
+        btnPlayId: "btnPlay-right",
+        softenErrorColors: true,
+        initialFov: 36,
+        cameraDistanceScale: 0.88,
+      },
+      {
+        containerId: "viewer-kp-hand",
+        runDir: runKpHand,
+        statusId: "status-kp-hand",
+        sliderId: "slider-kp-hand",
+        frameTextId: "frameText-kp-hand",
+        btnPlayId: "btnPlay-kp-hand",
+        initialFov: 30,
+        cameraDistanceScale: 0.88,
+        keypointSpheres: true,
+        sphereRadiusScale: kpSphereHand,
+        alignFramingRunDir: runLeft,
+      },
+    ],
+    smpl: [
+      {
+        containerId: "viewer-smpl-left",
+        runDir: runSmplLeft,
+        statusId: "status-smpl-left",
+        sliderId: "slider-smpl-left",
+        frameTextId: "frameText-smpl-left",
+        btnPlayId: "btnPlay-smpl-left",
+      },
+      {
+        containerId: "viewer-smpl-right",
+        runDir: runSmplRight,
+        statusId: "status-smpl-right",
+        sliderId: "slider-smpl-right",
+        frameTextId: "frameText-smpl-right",
+        btnPlayId: "btnPlay-smpl-right",
+        softenErrorColors: true,
+      },
+      {
+        containerId: "viewer-kp-smpl",
+        runDir: runKpSmpl,
+        statusId: "status-kp-smpl",
+        sliderId: "slider-kp-smpl",
+        frameTextId: "frameText-kp-smpl",
+        btnPlayId: "btnPlay-kp-smpl",
+        keypointSpheres: true,
+        sphereRadiusScale: kpSphereSmpl,
+        alignFramingRunDir: runSmplLeft,
+      },
+    ],
+    double: [
+      {
+        containerId: "viewer-double-left",
+        runDir: runDoubleLeft,
+        statusId: "status-double-left",
+        sliderId: "slider-double-left",
+        frameTextId: "frameText-double-left",
+        btnPlayId: "btnPlay-double-left",
+        initialFov: 55,
+        cameraDistanceScale: 1.5,
+      },
+      {
+        containerId: "viewer-double-right",
+        runDir: runDoubleRight,
+        statusId: "status-double-right",
+        sliderId: "slider-double-right",
+        frameTextId: "frameText-double-right",
+        btnPlayId: "btnPlay-double-right",
+        softenErrorColors: true,
+        initialFov: 55,
+        cameraDistanceScale: 1.5,
+      },
+      {
+        containerId: "viewer-kp-double",
+        runDir: runKpDouble,
+        statusId: "status-kp-double",
+        sliderId: "slider-kp-double",
+        frameTextId: "frameText-kp-double",
+        btnPlayId: "btnPlay-kp-double",
+        initialFov: 55,
+        cameraDistanceScale: 1.5,
+        keypointSpheres: true,
+        sphereRadiusScale: kpSphereDouble,
+        alignFramingRunDir: runDoubleLeft,
+      },
+    ],
+    ear: [
+      {
+        containerId: "viewer-ear-left",
+        runDir: runEarLeft,
+        statusId: "status-ear-left",
+        sliderId: "slider-ear-left",
+        frameTextId: "frameText-ear-left",
+        btnPlayId: "btnPlay-ear-left",
+        initialFov: 55,
+        cameraDistanceScale: 1.5,
+      },
+      {
+        containerId: "viewer-ear-right",
+        runDir: runEarRight,
+        statusId: "status-ear-right",
+        sliderId: "slider-ear-right",
+        frameTextId: "frameText-ear-right",
+        btnPlayId: "btnPlay-ear-right",
+        softenErrorColors: true,
+        initialFov: 55,
+        cameraDistanceScale: 1.5,
+      },
+      {
+        containerId: "viewer-kp-ear",
+        runDir: runKpEar,
+        statusId: "status-kp-ear",
+        sliderId: "slider-kp-ear",
+        frameTextId: "frameText-kp-ear",
+        btnPlayId: "btnPlay-kp-ear",
+        initialFov: 55,
+        cameraDistanceScale: 1.5,
+        keypointSpheres: true,
+        sphereRadiusScale: kpSphereEar,
+        alignFramingRunDir: runEarLeft,
+      },
+    ],
+    go2: [
+      {
+        containerId: "viewer-go2-left",
+        runDir: runGo2Left,
+        statusId: "status-go2-left",
+        sliderId: "slider-go2-left",
+        frameTextId: "frameText-go2-left",
+        btnPlayId: "btnPlay-go2-left",
+        initialFov: 36,
+        cameraDistanceScale: 0.88,
+      },
+      {
+        containerId: "viewer-go2-right",
+        runDir: runGo2Right,
+        statusId: "status-go2-right",
+        sliderId: "slider-go2-right",
+        frameTextId: "frameText-go2-right",
+        btnPlayId: "btnPlay-go2-right",
+        softenErrorColors: true,
+        initialFov: 36,
+        cameraDistanceScale: 0.88,
+      },
+      {
+        containerId: "viewer-kp-go2",
+        runDir: runKpGo2,
+        statusId: "status-kp-go2",
+        sliderId: "slider-kp-go2",
+        frameTextId: "frameText-kp-go2",
+        btnPlayId: "btnPlay-kp-go2",
+        initialFov: 36,
+        cameraDistanceScale: 0.88,
+        keypointSpheres: true,
+        sphereRadiusScale: kpSphereGo2,
+        alignFramingRunDir: runGo2Left,
+      },
+    ],
+    train: [
+      {
+        containerId: "viewer-train-process",
+        runDir: runTrainProcess,
+        statusId: "status-train-process",
+        sliderId: "slider-train-process",
+        frameTextId: "frameText-train-process",
+        btnPlayId: "btnPlay-train-process",
+        softenErrorColors: true,
+        initialFov: 42,
+        cameraDistanceScale: 1.0,
+      },
+      {
+        containerId: "viewer-train-process-h1",
+        runDir: runTrainProcessH1,
+        statusId: "status-train-process-h1",
+        sliderId: "slider-train-process-h1",
+        frameTextId: "frameText-train-process-h1",
+        btnPlayId: "btnPlay-train-process-h1",
+        softenErrorColors: true,
+        initialFov: 42,
+        cameraDistanceScale: 1.0,
+      },
+    ],
+  };
+}
+
+const ROW_KP_WIRE = {
+  hand: {
+    leader: "viewer-kp-hand",
+    followers: ["viewer-left", "viewer-right"],
+    checkboxId: "sync-follow-kp-hand",
+    sliderIds: ["slider-left", "slider-right"],
+    buttonIds: ["btnPlay-left", "btnPlay-right"],
+  },
+  smpl: {
+    leader: "viewer-kp-smpl",
+    followers: ["viewer-smpl-left", "viewer-smpl-right"],
+    checkboxId: "sync-follow-kp-smpl",
+    sliderIds: ["slider-smpl-left", "slider-smpl-right"],
+    buttonIds: ["btnPlay-smpl-left", "btnPlay-smpl-right"],
+  },
+  double: {
+    leader: "viewer-kp-double",
+    followers: ["viewer-double-left", "viewer-double-right"],
+    checkboxId: "sync-follow-kp-double",
+    sliderIds: ["slider-double-left", "slider-double-right"],
+    buttonIds: ["btnPlay-double-left", "btnPlay-double-right"],
+  },
+  ear: {
+    leader: "viewer-kp-ear",
+    followers: ["viewer-ear-left", "viewer-ear-right"],
+    checkboxId: "sync-follow-kp-ear",
+    sliderIds: ["slider-ear-left", "slider-ear-right"],
+    buttonIds: ["btnPlay-ear-left", "btnPlay-ear-right"],
+  },
+  go2: {
+    leader: "viewer-kp-go2",
+    followers: ["viewer-go2-left", "viewer-go2-right"],
+    checkboxId: "sync-follow-kp-go2",
+    sliderIds: ["slider-go2-left", "slider-go2-right"],
+    buttonIds: ["btnPlay-go2-left", "btnPlay-go2-right"],
+  },
+};
+
+async function initViewerRow(tasks) {
+  const results = await Promise.all(tasks.map((opts) => initViewerTask(opts)));
+  for (const r of results) registerViewerResult(r);
+  return results;
+}
+
+function rowIsHidden(el) {
+  return Boolean(el.closest(".viz-more-block.is-hidden"));
+}
+
+async function main() {
+  const rowTasks = buildRowTasks();
+  const loadAllNow = params.get("eager") === "1";
+
+  const rowEls = document.querySelectorAll("[data-viz-row]");
+  if (!rowEls.length) {
+    console.warn("No [data-viz-row] grids found; loading all viewers immediately.");
+    for (const [rowId, tasks] of Object.entries(rowTasks)) {
+      await initViewerRow(tasks);
+      if (ROW_KP_WIRE[rowId]) wireKpRow(ROW_KP_WIRE[rowId]);
+    }
+    requestAnimationFrame(() => {
+      window.dispatchEvent(new Event("resize"));
+      syncKpCameras();
+    });
+    return;
   }
-});
+
+  const startRow = async (rowId, tasks) => {
+    setRowPendingStatus(tasks, "Loading…");
+    await initViewerRow(tasks);
+    if (ROW_KP_WIRE[rowId]) wireKpRow(ROW_KP_WIRE[rowId]);
+    requestAnimationFrame(() => {
+      window.dispatchEvent(new Event("resize"));
+      syncKpCameras();
+    });
+  };
+
+  const observeRow = (el, rowId, tasks) => {
+    if (loadAllNow) {
+      startRow(rowId, tasks);
+      return;
+    }
+
+    setRowPendingStatus(tasks);
+
+    let started = false;
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (started) return;
+        if (!entries.some((e) => e.isIntersecting)) return;
+        started = true;
+        io.disconnect();
+        startRow(rowId, tasks);
+      },
+      { root: null, rootMargin: "280px 0px", threshold: 0.01 }
+    );
+    io.observe(el);
+  };
+
+  for (const el of rowEls) {
+    const rowId = el.dataset.vizRow;
+    const tasks = rowTasks[rowId];
+    if (!tasks) {
+      console.warn(`Unknown data-viz-row="${rowId}"`);
+      continue;
+    }
+
+    if (rowIsHidden(el)) continue;
+
+    observeRow(el, rowId, tasks);
+  }
+
+  document.addEventListener("viz-reveal-row", (e) => {
+    const rowId = e.detail?.rowId;
+    if (!rowId) return;
+    const el = document.querySelector(`[data-viz-row="${rowId}"]`);
+    const tasks = rowTasks[rowId];
+    if (!el || !tasks) return;
+    observeRow(el, rowId, tasks);
+  });
+}
+
+main().catch((err) => console.error(err));

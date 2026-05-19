@@ -10,12 +10,16 @@ body {
   color: var(--text);
   font-family: "Source Sans 3", ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial,
     sans-serif;
-  font-size: 17px;
-  line-height: 1.55;
+  font-size: 16px;
+  line-height: 1.58;
 }
 
 :root {
   --bg: #ffffff;
+  --academic-bg: #f4f2ea;
+  --academic-bg-mid: #ebe8de;
+  --academic-bg-deep: #e3dfd3;
+  --academic-wash: 244, 242, 234;
   --surface: #f6f7f9;
   --surface2: #eef0f4;
   --border: rgba(0, 0, 0, 0.1);
@@ -23,6 +27,26 @@ body {
   --muted: rgba(26, 29, 36, 0.68);
   --accent: #9a7a18;
   --accent-soft: rgba(154, 122, 24, 0.12);
+  --page-pad-inline: clamp(4rem, 15vw, 22rem);
+  --page-pad-top: 4rem;
+  --abstract-max-width: min(40rem, 72%);
+  --abstract-pad-bottom: 6rem;
+  --paper-intro-pad-top: 4rem;
+}
+
+.academic-surface {
+  width: 100vw;
+  max-width: 100vw;
+  margin: 0 calc(50% - 50vw);
+  background: var(--academic-bg);
+}
+
+.academic-band {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  background: transparent;
 }
 
 .page {
@@ -30,16 +54,88 @@ body {
   width: 100%;
   max-width: min(1600px, 100%);
   margin: 0 auto;
-  padding: 5rem clamp(5rem, 15vw, 13rem) 6rem;
+  padding: var(--page-pad-top) var(--page-pad-inline) 6rem;
   box-sizing: border-box;
+  overflow-x: clip;
 }
 
 .hero {
   width: 100%;
   max-width: 100%;
-  margin-bottom: 2.75rem;
-  padding-bottom: 2rem;
-  border-bottom: 1px solid var(--border);
+  margin: calc(-1 * var(--page-pad-top)) 0 0;
+  padding: var(--page-pad-top) var(--page-pad-inline) 2.25rem;
+  box-sizing: border-box;
+  background: transparent;
+  border-bottom: none;
+}
+
+.paper-teaser-zone {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+/* 学术底色：铺满 Abstract + 按钮区域 */
+.paper-teaser-zone::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: var(--academic-bg);
+  pointer-events: none;
+}
+
+/* 顶部对齐 Abstract，底部对齐本区（含按钮）结束位置 */
+.paper-teaser-zone__bg {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1;
+  pointer-events: none;
+  background-image: linear-gradient(
+      180deg,
+      rgba(var(--academic-wash), 0.92) 0%,
+      rgba(var(--academic-wash), 0.62) 32%,
+      rgba(var(--academic-wash), 0.32) 68%,
+      rgba(var(--academic-wash), 0.08) 100%
+    ),
+    url("./teaser3.png");
+  background-position: center top, center top;
+  background-size: cover, cover;
+  background-repeat: no-repeat, no-repeat;
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.12) 0%,
+    rgba(0, 0, 0, 0.38) 38%,
+    rgba(0, 0, 0, 0.68) 72%,
+    rgba(0, 0, 0, 0.9) 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.12) 0%,
+    rgba(0, 0, 0, 0.38) 38%,
+    rgba(0, 0, 0, 0.68) 72%,
+    rgba(0, 0, 0, 0.9) 100%
+  );
+}
+
+.paper-intro {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0 var(--page-pad-inline) var(--abstract-pad-bottom);
+  box-sizing: border-box;
+  background: transparent;
 }
 
 .hero-kicker {
@@ -73,7 +169,7 @@ body {
   max-width: 100%;
   width: 100%;
   color: var(--muted);
-  font-size: 1.05rem;
+  font-size: 1.22rem;
 }
 
 .hero-tagline strong {
@@ -81,17 +177,20 @@ body {
   font-weight: 600;
 }
 
-.paper-blurb,
-.paper-contrib {
-  margin-bottom: 2.25rem;
+.paper-intro .paper-blurb {
+  margin: 0 auto;
   width: 100%;
-  max-width: 100%;
+  max-width: var(--abstract-max-width);
+}
+
+.paper-blurb .blurb-heading {
+  text-align: center;
 }
 
 .blurb-heading {
   margin: 0 0 0.85rem;
   font-family: "Crimson Pro", Georgia, serif;
-  font-size: 1.2rem;
+  font-size: 1.52rem;
   font-weight: 600;
   color: var(--text);
 }
@@ -101,7 +200,7 @@ body {
   max-width: 100%;
   width: 100%;
   color: var(--muted);
-  font-size: 0.98rem;
+  font-size: 1.05rem;
 }
 
 .blurb-text:last-child {
@@ -118,33 +217,10 @@ body {
   font-weight: 600;
 }
 
-.paper-list {
-  margin: 0;
-  padding-left: 1.25rem;
-  max-width: 100%;
-  width: 100%;
-  box-sizing: border-box;
-  color: var(--muted);
-  font-size: 0.98rem;
-}
-
-.paper-list li {
-  margin-bottom: 0.75rem;
-}
-
-.paper-list li:last-child {
-  margin-bottom: 0;
-}
-
-.paper-list strong {
-  color: var(--text);
-  font-weight: 600;
-}
-
 .section-title {
   margin: 0 0 0.5rem;
   font-family: "Crimson Pro", Georgia, serif;
-  font-size: 1.35rem;
+  font-size: 1.48rem;
   font-weight: 600;
   color: var(--text);
 }
@@ -153,7 +229,7 @@ body {
   margin: 0 0 1.5rem;
   max-width: 100%;
   width: 100%;
-  font-size: 0.95rem;
+  font-size: 1.03rem;
   color: var(--muted);
 }
 
@@ -229,13 +305,168 @@ body {
   margin-bottom: 2.5rem;
 }
 
-.viz-subsection-title {
-  margin: 2.25rem 0 0.5rem;
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.academic-band .viz-reveal-wrap,
+.academic-band .viz-section,
+.paper-teaser-zone .viz-reveal-wrap {
+  background: transparent;
+}
+
+.paper-teaser-zone .viz-reveal-wrap {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1.75rem 0 2.25rem;
+}
+
+.academic-band .viz-section {
+  position: relative;
+  z-index: 0;
+  margin-top: 0;
+  padding: 0.75rem 0 0;
+  box-sizing: border-box;
+  background: transparent;
+}
+
+.viz-reveal-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1.75rem 0 2.25rem;
+}
+
+.viz-reveal-wrap.is-hidden {
+  visibility: hidden;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.viz-more-wrap.is-hidden {
+  display: none;
+}
+
+.viz-more-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1.75rem 0 2.25rem;
+}
+
+.viz-more-block.is-hidden {
+  display: none;
+}
+
+.viz-reveal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.65rem 1.25rem;
+  font-family: inherit;
+  color: var(--text);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  animation: viz-reveal-pulse 0.65s ease-in-out infinite;
+}
+
+.viz-reveal:hover {
+  animation-play-state: paused;
+  opacity: 0.88;
+}
+
+.viz-reveal:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+  border-radius: 6px;
+}
+
+.viz-reveal__arrows {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  line-height: 0;
+}
+
+.viz-reveal__arrow {
+  display: block;
+  width: 1.65rem;
+  height: 1.65rem;
+  margin: -0.58rem 0;
+  border-right: 4px solid var(--accent);
+  border-bottom: 4px solid var(--accent);
+  transform: rotate(45deg);
+  filter: drop-shadow(0 1px 2px rgba(154, 122, 24, 0.35));
+}
+
+.viz-reveal__label {
   font-family: "Crimson Pro", Georgia, serif;
-  font-size: 1.15rem;
+  font-size: 1.22rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1.2;
+  background: linear-gradient(
+    105deg,
+    #1e5fa8 0%,
+    #2d8f6f 38%,
+    #9a7a18 72%,
+    #c45a9a 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@keyframes viz-reveal-pulse {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(10px);
+    opacity: 0.55;
+  }
+}
+
+.viz-panel__body.is-collapsed {
+  display: none;
+}
+
+.viz-panel__body .section-title {
+  margin-bottom: 0.5rem;
+}
+
+.viz-panel__body .section-lead {
+  margin-top: 0;
+}
+
+.viz-subsection-title {
+  margin: 2.25rem 0 0.85rem;
+  font-family: "Crimson Pro", Georgia, serif;
+  font-size: 1.28rem;
   font-weight: 600;
   color: var(--text);
   letter-spacing: 0.01em;
+}
+
+.viz-subsection-title--first {
+  margin-top: 1.35rem;
 }
 
 .viz-subsection-lead {
@@ -268,8 +499,55 @@ body {
   min-height: 0;
 }
 
+.viz-grid--cols4 {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.viz-grid--cols4 > .viz-card {
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
+}
+
+.viz-grid--cols4 .viewer {
+  flex: 0 0 auto;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  min-height: 0;
+}
+
+.viz-grid--cols4 .inline-video--panel {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: contain;
+  background: var(--surface2);
+}
+
+@media (max-width: 1400px) {
+  .viz-grid--cols4:not(.viz-grid--train-row) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 @media (max-width: 1200px) {
   .viz-grid--cols3 {
+    grid-template-columns: 1fr;
+  }
+
+  .viz-grid--cols4:not(.viz-grid--train-row) {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 900px) {
+  .viz-grid--train-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .viz-grid--train-row {
     grid-template-columns: 1fr;
   }
 }
@@ -333,7 +611,6 @@ body {
 
 /* Reserves the same vertical space as the keypoint "Sync…" row so the canvas height matches. */
 .controls-sync-spacer {
-  flex-basis: 100%;
   min-height: 2.35rem;
   pointer-events: none;
 }
@@ -354,23 +631,87 @@ body {
 .controls {
   padding: 0.65rem 1rem 1rem;
   border-top: 1px solid var(--border);
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.65rem 1rem;
+  display: grid;
+  grid-template-columns: minmax(0, max-content) minmax(0, 1fr);
+  gap: 0.5rem 0.65rem;
   align-items: center;
-  justify-content: flex-start;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+/* Sync checkbox / spacer on its own row; Pause + frame slider share one row. */
+.controls > .row--checkbox,
+.controls > .controls-sync-spacer {
+  grid-column: 1 / -1;
+}
+
+.controls > button {
+  grid-column: 1;
+  justify-self: start;
+  max-width: 100%;
+}
+
+.controls > .row:not(.row--checkbox) {
+  grid-column: 2;
+  min-width: 0;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* Compact playback row inside viz cards (3- and 4-col grids). */
+.viz-card .controls {
+  padding: 0.5rem 0.6rem 0.7rem;
+  gap: 0.4rem 0.45rem;
+}
+
+.viz-card .controls > button {
+  padding: 0.3rem 0.45rem;
+  font-size: 0.72rem;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.viz-card .controls > .row:not(.row--checkbox) {
+  gap: 0.35rem;
+}
+
+/* "Frame" label removed in narrow cards — slider + counter stay on one line. */
+.viz-card .controls > .row:not(.row--checkbox) .label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.viz-card .controls .value {
+  min-width: 2.5rem;
+  font-size: 0.72rem;
+  font-variant-numeric: tabular-nums;
+  flex: 0 0 auto;
+}
+
+.viz-card .controls input[type="range"] {
+  flex: 1 1 0;
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
 }
 
 .row {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  flex: 1 1 220px;
   min-width: 0;
 }
 
 .row--checkbox {
-  flex-basis: 100%;
   justify-content: flex-start;
 }
 
@@ -394,8 +735,8 @@ body {
 }
 
 input[type="range"] {
-  flex: 1;
-  min-width: 80px;
+  flex: 1 1 0;
+  min-width: 0;
   max-width: 100%;
 }
 

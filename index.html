@@ -18,16 +18,21 @@
   </head>
   <body>
     <div class="page">
-      <header class="hero">
+      <div class="academic-surface">
+        <header class="hero">
         <p class="hero-kicker">Actionable world modeling · WorldString</p>
         <h1 class="hero-title">Actionable World Representation</h1>
         <p class="hero-tagline">
           A neural architecture that learns the <strong>state manifold</strong> of real-world objects as a
           <strong>differentiable digital twin</strong>—from point clouds or RGB-D, toward policy and dynamics.
         </p>
-      </header>
+        </header>
 
-      <section class="paper-blurb" aria-labelledby="abstract-heading">
+        <div class="academic-band">
+          <div class="paper-teaser-zone">
+            <div class="paper-teaser-zone__bg" role="presentation" aria-hidden="true"></div>
+            <div class="paper-intro">
+              <section class="paper-blurb" aria-labelledby="abstract-heading">
         <h2 id="abstract-heading" class="blurb-heading">Abstract</h2>
         <p class="blurb-text">
           Recent large models show strong conceptual world modeling, but grounded <em>physical</em> understanding
@@ -44,30 +49,30 @@
           WorldString serves as a versatile building block for physical world models and interfaces naturally with
           policy learning and neural dynamics.
         </p>
+              </section>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <section class="pipeline-section" id="real-world-object-heading" aria-labelledby="real-world-object-title">
+        <h2 id="real-world-object-title" class="section-title">Real World Object</h2>
+        <p class="section-lead">
+          Real-world capture in the lab: RGB-D sensing and object-centric processing toward keypoint-conditioned WorldString
+          training data.
+        </p>
+        <figure class="pipeline-video-wrap">
+          <video class="pipeline-video" controls autoplay muted loop playsinline preload="metadata">
+            <source src="./real_data_lab.mov" />
+            Your browser does not support the video tag.
+          </video>
+          <figcaption class="pipeline-caption">Real-world object capture and processing (lab).</figcaption>
+        </figure>
       </section>
 
-      <section class="paper-contrib" aria-labelledby="contrib-heading">
-        <h2 id="contrib-heading" class="blurb-heading">Contributions (at a glance)</h2>
-        <ul class="paper-list">
-          <li>
-            <strong>WorldString.</strong> An actionable representation that learns object-centric digital twins
-            from point clouds or RGB-D video, unifying articulated, skinning, and soft objects under a common
-            keypoint-conditioned formulation.
-          </li>
-          <li>
-            <strong>Differentiable three-stage architecture.</strong> State → Object → Voxel transformers map from
-            sparse keypoint state to structured latent geometry and explicit 3D occupancy.
-          </li>
-          <li>
-            <strong>Interpretable visualization.</strong> Surface colors show <em>learned token assignment</em> to
-            regions; an <em>error map</em> highlights mismatches against ground truth (true / false positives and
-            negatives).
-          </li>
-        </ul>
-      </section>
-
-      <section class="viz-section" aria-labelledby="viz-heading">
-        <h2 id="viz-heading" class="section-title">Interactive figure (supplementary)</h2>
+      <div class="academic-band">
+        <section class="viz-section" id="viz-heading" aria-labelledby="viz-heading-title">
+          <h2 id="viz-heading-title" class="section-title">Interactive visualization</h2>
         <p class="section-lead">
           Each row has three panels (left to right): <strong>input keypoints</strong>,
           <strong>learned token-colored shape</strong>, and <strong>error map</strong> (same timestamps as the
@@ -76,11 +81,12 @@
           its camera, frame, and play/pause state to the other two panels in that row.
         </p>
 
-        <div class="viz-grid viz-grid--cols3">
-          <article class="viz-card" data-side="kp">
-            <div class="viz-card-head">
-              <h3 class="viz-card-title">Keypoints (input)</h3>
-              <span class="viz-card-meta" id="status-kp-hand">Loading…</span>
+          <h3 class="viz-subsection-title viz-subsection-title--first">Robot hand</h3>
+          <div class="viz-grid viz-grid--cols3" data-viz-row="hand">
+            <article class="viz-card" data-side="kp">
+              <div class="viz-card-head">
+                <h3 class="viz-card-title">Keypoints (input)</h3>
+                <span class="viz-card-meta" id="status-kp-hand">Loading…</span>
             </div>
             <div class="viewer viewer--kp" id="viewer-kp-hand"></div>
             <div class="controls">
@@ -132,17 +138,17 @@
           </article>
         </div>
 
-        <h3 class="viz-subsection-title">SMPL football motion (skinning)</h3>
+          <h3 class="viz-subsection-title">SMPL football motion (skinning)</h3>
         <p class="section-lead viz-subsection-lead">
           SMPL kicking; keypoints from the aligned <code>smpl_mocap_*.da</code> sequence (same frame indices as the
           shape export).
         </p>
 
-        <div class="viz-grid viz-grid--cols3">
-          <article class="viz-card" data-side="kp">
-            <div class="viz-card-head">
-              <h3 class="viz-card-title">Keypoints (input)</h3>
-              <span class="viz-card-meta" id="status-kp-smpl">Loading…</span>
+          <div class="viz-grid viz-grid--cols3" data-viz-row="smpl">
+            <article class="viz-card" data-side="kp">
+              <div class="viz-card-head">
+                <h3 class="viz-card-title">Keypoints (input)</h3>
+                <span class="viz-card-meta" id="status-kp-smpl">Loading…</span>
             </div>
             <div class="viewer viewer--kp" id="viewer-kp-smpl"></div>
             <div class="controls">
@@ -194,13 +200,70 @@
           </article>
         </div>
 
+
+          <h3 class="viz-subsection-title">Earphone</h3>
+          <div class="viz-grid viz-grid--cols3" data-viz-row="ear">
+            <article class="viz-card" data-side="kp">
+              <div class="viz-card-head">
+                <h3 class="viz-card-title">Keypoints (input)</h3>
+                <span class="viz-card-meta" id="status-kp-ear">Loading…</span>
+              </div>
+              <div class="viewer viewer--kp" id="viewer-kp-ear"></div>
+              <div class="controls">
+                <label class="row row--checkbox">
+                  <input id="sync-follow-kp-ear" type="checkbox" />
+                  <span class="label">Sync other panels to this view</span>
+                </label>
+                <button id="btnPlay-kp-ear" type="button">Pause</button>
+                <label class="row">
+                  <span class="label">Frame</span>
+                  <input id="slider-kp-ear" type="range" min="0" max="0" step="1" value="0" />
+                  <span class="value" id="frameText-kp-ear">0/0</span>
+                </label>
+              </div>
+            </article>
+            <article class="viz-card" data-side="left">
+              <div class="viz-card-head">
+                <h3 class="viz-card-title">Learned token assignment</h3>
+                <span class="viz-card-meta" id="status-ear-left">Loading…</span>
+              </div>
+              <div class="viewer" id="viewer-ear-left"></div>
+              <div class="controls">
+                <div class="controls-sync-spacer" aria-hidden="true"></div>
+                <button id="btnPlay-ear-left" type="button">Pause</button>
+                <label class="row">
+                  <span class="label">Frame</span>
+                  <input id="slider-ear-left" type="range" min="0" max="0" step="1" value="0" />
+                  <span class="value" id="frameText-ear-left">0/0</span>
+                </label>
+              </div>
+            </article>
+            <article class="viz-card" data-side="right">
+              <div class="viz-card-head">
+                <h3 class="viz-card-title">Error map vs. ground truth</h3>
+                <span class="viz-card-meta" id="status-ear-right">Loading…</span>
+              </div>
+              <div class="viewer" id="viewer-ear-right"></div>
+              <div class="controls">
+                <div class="controls-sync-spacer" aria-hidden="true"></div>
+                <button id="btnPlay-ear-right" type="button">Pause</button>
+                <label class="row">
+                  <span class="label">Frame</span>
+                  <input id="slider-ear-right" type="range" min="0" max="0" step="1" value="0" />
+                  <span class="value" id="frameText-ear-right">0/0</span>
+                </label>
+              </div>
+            </article>
+          </div>
+
+          <div class="viz-more-block is-hidden" data-viz-more-row="double">
         <h3 class="viz-subsection-title">Double stretch (soft / deformable)</h3>
         <p class="section-lead viz-subsection-lead">
           Double-stretch sloth; keypoints from aligned <code>state_*.da</code> in the training split (indices match the
           shape sequence).
         </p>
 
-        <div class="viz-grid viz-grid--cols3">
+        <div class="viz-grid viz-grid--cols3" data-viz-row="double">
           <article class="viz-card" data-side="kp">
             <div class="viz-card-head">
               <h3 class="viz-card-title">Keypoints (input)</h3>
@@ -256,23 +319,92 @@
           </article>
         </div>
 
+
+          </div>
+
+          <div class="viz-more-block is-hidden" data-viz-more-row="go2">
+            <h3 class="viz-subsection-title">Unitree Go2</h3>
+            <div class="viz-grid viz-grid--cols3" data-viz-row="go2">
+              <article class="viz-card" data-side="kp">
+                <div class="viz-card-head">
+                  <h3 class="viz-card-title">Keypoints (input)</h3>
+                  <span class="viz-card-meta" id="status-kp-go2">Loading…</span>
+                </div>
+                <div class="viewer viewer--kp" id="viewer-kp-go2"></div>
+                <div class="controls">
+                  <label class="row row--checkbox">
+                    <input id="sync-follow-kp-go2" type="checkbox" />
+                    <span class="label">Sync other panels to this view</span>
+                  </label>
+                  <button id="btnPlay-kp-go2" type="button">Pause</button>
+                  <label class="row">
+                    <span class="label">Frame</span>
+                    <input id="slider-kp-go2" type="range" min="0" max="0" step="1" value="0" />
+                    <span class="value" id="frameText-kp-go2">0/0</span>
+                  </label>
+                </div>
+              </article>
+              <article class="viz-card" data-side="left">
+                <div class="viz-card-head">
+                  <h3 class="viz-card-title">Learned token assignment</h3>
+                  <span class="viz-card-meta" id="status-go2-left">Loading…</span>
+                </div>
+                <div class="viewer" id="viewer-go2-left"></div>
+                <div class="controls">
+                  <div class="controls-sync-spacer" aria-hidden="true"></div>
+                  <button id="btnPlay-go2-left" type="button">Pause</button>
+                  <label class="row">
+                    <span class="label">Frame</span>
+                    <input id="slider-go2-left" type="range" min="0" max="0" step="1" value="0" />
+                    <span class="value" id="frameText-go2-left">0/0</span>
+                  </label>
+                </div>
+              </article>
+              <article class="viz-card" data-side="right">
+                <div class="viz-card-head">
+                  <h3 class="viz-card-title">Error map vs. ground truth</h3>
+                  <span class="viz-card-meta" id="status-go2-right">Loading…</span>
+                </div>
+                <div class="viewer" id="viewer-go2-right"></div>
+                <div class="controls">
+                  <div class="controls-sync-spacer" aria-hidden="true"></div>
+                  <button id="btnPlay-go2-right" type="button">Pause</button>
+                  <label class="row">
+                    <span class="label">Frame</span>
+                    <input id="slider-go2-right" type="range" min="0" max="0" step="1" value="0" />
+                    <span class="value" id="frameText-go2-right">0/0</span>
+                  </label>
+                </div>
+              </article>
+            </div>
+          </div>
+
+          <div class="viz-more-wrap" id="viz-more-wrap">
+            <button id="viz-more-btn" class="viz-reveal viz-more" type="button">
+              <span class="viz-reveal__arrows" aria-hidden="true">
+                <span class="viz-reveal__arrow"></span>
+                <span class="viz-reveal__arrow"></span>
+              </span>
+              <span class="viz-reveal__label">More</span>
+            </button>
+          </div>
+
         <p class="viz-footnote">
           Error map: <strong>green</strong> — TP · <strong>red</strong> — FP · <strong>blue</strong> — FN (red/blue are
           softened toward greener tones in the panel for readability). Keypoints are colored by joint index (HSV) and drawn as
           shaded spheres; they use the same frame
           index as the adjacent shape panels.
         </p>
-      </section>
+        </section>
+      </div>
 
       <section class="viz-section" aria-labelledby="train-process-heading">
         <h2 id="train-process-heading" class="section-title">Training Process Visualization</h2>
         <p class="section-lead">
-          Training snapshots from <code>training_process_visual</code> and <code>visual_h1_process</code>, downsampled
-          for web playback and shown with the same interactive controls.
+          Training process visualization for the Go2 and H1 models. Test the saved checkpoints on same keypoint states.
         </p>
 
-        <h3 class="viz-subsection-title">Go2</h3>
-        <div class="viz-grid viz-grid--cols2">
+        <div class="viz-grid viz-grid--cols4 viz-grid--train-row" data-viz-row="train">
           <article class="viz-card">
             <div class="viz-card-head">
               <h3 class="viz-card-title">Go2 training process (point cloud)</h3>
@@ -293,15 +425,12 @@
             <div class="viz-card-head">
               <h3 class="viz-card-title">Go2 multi-pose</h3>
             </div>
-            <video class="inline-video" controls autoplay muted loop playsinline preload="metadata">
+            <video class="inline-video inline-video--panel" controls autoplay muted loop playsinline preload="metadata">
               <source src="./go2_multipose.mp4" type="video/mp4" />
               Your browser does not support the video tag.
             </video>
           </article>
-        </div>
 
-        <h3 class="viz-subsection-title">H1</h3>
-        <div class="viz-grid viz-grid--cols2">
           <article class="viz-card">
             <div class="viz-card-head">
               <h3 class="viz-card-title">H1 training process (point cloud)</h3>
@@ -322,41 +451,12 @@
             <div class="viz-card-head">
               <h3 class="viz-card-title">H1 multi-pose</h3>
             </div>
-            <video class="inline-video" controls autoplay muted loop playsinline preload="metadata">
+            <video class="inline-video inline-video--panel" controls autoplay muted loop playsinline preload="metadata">
               <source src="./h1_multipose.mp4" type="video/mp4" />
               Your browser does not support the video tag.
             </video>
           </article>
         </div>
-      </section>
-
-      <section class="pipeline-section" aria-labelledby="pipeline-heading">
-        <h2 id="pipeline-heading" class="section-title">Real Object Data Pipeline</h2>
-        <p class="section-lead">
-          Pipeline overview for collecting and processing real object data used in WorldString training and
-          evaluation.
-        </p>
-        <figure class="pipeline-video-wrap">
-          <video class="pipeline-video" controls autoplay muted loop playsinline preload="metadata">
-            <source src="./real_data_gen_pipeline.mov" />
-            Your browser does not support the video tag.
-          </video>
-          <figcaption class="pipeline-caption">Real object data processing pipeline.</figcaption>
-        </figure>
-      </section>
-
-      <section class="pipeline-section" aria-labelledby="sim-pipeline-heading">
-        <h2 id="sim-pipeline-heading" class="section-title">Simulated Data Generation Pipeline</h2>
-        <p class="section-lead">
-          Overview of how simulated object data is generated for WorldString training and experiments.
-        </p>
-        <figure class="pipeline-video-wrap">
-          <video class="pipeline-video" controls autoplay muted loop playsinline preload="metadata">
-            <source src="./sim_data_gen_pipeline.mov" />
-            Your browser does not support the video tag.
-          </video>
-          <figcaption class="pipeline-caption">Simulated data generation pipeline.</figcaption>
-        </figure>
       </section>
 
       <section class="paper-figure-section paper-figure-section--method" aria-labelledby="method-fig-heading">
@@ -412,6 +512,41 @@
         }
       }
     </script>
-    <script type="module" src="./app.js"></script>
+    <script type="module" src="./app.js?v=lazy5"></script>
+    <script>
+      (function () {
+        const moreBtn = document.getElementById("viz-more-btn");
+        const moreWrap = document.getElementById("viz-more-wrap");
+        const vizSection = moreWrap?.closest(".viz-section");
+        const hiddenBlocks = Array.from(document.querySelectorAll(".viz-more-block.is-hidden"));
+        if (!moreBtn || !moreWrap || !vizSection) return;
+
+        function placeMoreButton() {
+          if (moreWrap.classList.contains("is-hidden")) return;
+          const revealed = vizSection.querySelectorAll(".viz-more-block:not(.is-hidden)");
+          const anchor =
+            revealed.length > 0
+              ? revealed[revealed.length - 1]
+              : vizSection.querySelector('[data-viz-row="ear"]');
+          if (anchor) anchor.after(moreWrap);
+        }
+
+        placeMoreButton();
+
+        moreBtn.addEventListener("click", () => {
+          const next = hiddenBlocks.shift();
+          if (!next) return;
+          next.classList.remove("is-hidden");
+          const rowId = next.dataset.vizMoreRow;
+          if (rowId) document.dispatchEvent(new CustomEvent("viz-reveal-row", { detail: { rowId } }));
+          placeMoreButton();
+          window.dispatchEvent(new Event("resize"));
+          if (!hiddenBlocks.length) {
+            moreWrap.classList.add("is-hidden");
+            moreWrap.setAttribute("aria-hidden", "true");
+          }
+        });
+      })();
+    </script>
   </body>
 </html>
