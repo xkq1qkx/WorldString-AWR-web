@@ -27,9 +27,11 @@ const kpSphereEar = 0.031;
 const kpSphereGo2 = 0.005;
 
 /** Max concurrent frame .bin fetches across all viewers on the page. */
-const GLOBAL_FRAME_FETCH_CONCURRENCY = 8;
-/** Per-viewer prefetch worker count (actual network capped globally). */
-const PER_VIEWER_PREFETCH_WORKERS = 2;
+const GLOBAL_FRAME_FETCH_CONCURRENCY = Number(params.get("fetchConcurrency")) || 12;
+/** Frames ahead/behind the playhead to prefetch (not the whole sequence). */
+const PREFETCH_RADIUS = Number(params.get("prefetchRadius")) || 18;
+/** Share frames_meta.json fetches across panels that use the same run folder. */
+const metaCache = new Map();
 
 let globalFrameFetchActive = 0;
 const globalFrameFetchQueue = [];
@@ -60,6 +62,11 @@ async function loadMeta(runDir) {
   const res = await fetch(metaUrl, { cache: "default" });
   if (!res.ok) throw new Error(`Failed to load meta: ${metaUrl}`);
   return await res.json();
+}
+
+function loadMetaCached(runDir) {
+  if (!metaCache.has(runDir)) metaCache.set(runDir, loadMeta(runDir));
+  return metaCache.get(runDir);
 }
 
 function parseFrameBuffer(buffer, nMax) {
@@ -135,35 +142,70 @@ function createFrameLoader(meta, framesBaseUrl) {
     return p;
   }
 
-  /** Prefetch all missing frames in the background (does not need to be awaited). */
-  function prefetchAll(setStatus, concurrency = PER_VIEWER_PREFETCH_WORKERS) {
-    const pending = [];
-    for (let i = 0; i < nFrames; i++) {
-      if (!buffers[i]) pending.push(i);
-    }
-    let loaded = nFrames - pending.length;
-    let next = 0;
+  const parsedCache = new Array(nFrames);
 
-    async function worker() {
-      while (true) {
-        const k = next;
-        next += 1;
-        if (k >= pending.length) return;
-        const idx = pending[k];
-        await loadFrame(idx);
-        loaded += 1;
-        if (loaded % 15 === 0 || loaded === nFrames) {
-          setStatus(`Caching frames: ${loaded}/${nFrames}`);
-        }
-      }
-    }
-
-    const workers = [];
-    for (let i = 0; i < concurrency; i++) workers.push(worker());
-    return Promise.all(workers);
+  function getParsed(i) {
+    if (parsedCache[i]) return parsedCache[i];
+    const buf = buffers[i];
+    if (!buf) return null;
+    parsedCache[i] = parseFrameBuffer(buf, meta.nPointsMax);
+    return parsedCache[i];
   }
 
-  return { buffers, loadFrame, prefetchAll, frameCount: nFrames };
+  /** Indices near `center` (playhead), closest first. */
+  function windowIndices(center, radius = PREFETCH_RADIUS) {
+    const out = [];
+    const seen = new Set();
+    const add = (i) => {
+      const idx = ((i % nFrames) + nFrames) % nFrames;
+      if (seen.has(idx)) return;
+      seen.add(idx);
+      out.push(idx);
+    };
+    add(center);
+    for (let d = 1; d <= radius; d++) {
+      add(center + d);
+      add(center - d);
+    }
+    return out;
+  }
+
+  function prefetchWindow(center, radius = PREFETCH_RADIUS) {
+    const todo = windowIndices(center, radius).filter((i) => !buffers[i]);
+    if (!todo.length) return Promise.resolve();
+    return Promise.all(todo.map((i) => loadFrame(i).catch((e) => console.error(e))));
+  }
+
+  let idlePrefetchToken = 0;
+  function startIdlePrefetch(setStatus) {
+    const token = ++idlePrefetchToken;
+    (async () => {
+      await new Promise((r) => setTimeout(r, 2500));
+      if (token !== idlePrefetchToken) return;
+      for (let i = 0; i < nFrames; i++) {
+        if (token !== idlePrefetchToken) return;
+        if (!buffers[i]) {
+          await loadFrame(i).catch((e) => console.error(e));
+          if (i % 20 === 0 && setStatus) setStatus(`Caching ${i + 1}/${nFrames}…`);
+          await new Promise((r) => setTimeout(r, 40));
+        }
+      }
+    })();
+  }
+
+  function cancelIdlePrefetch() {
+    idlePrefetchToken += 1;
+  }
+
+  return {
+    buffers,
+    loadFrame,
+    getParsed,
+    prefetchWindow,
+    startIdlePrefetch,
+    cancelIdlePrefetch,
+    frameCount: nFrames,
+  };
 }
 
 /**
@@ -206,11 +248,11 @@ async function initViewer(opts) {
   };
 
   setStatus("Loading metadata…");
-  const meta = await loadMeta(opts.runDir);
+  const meta = await loadMetaCached(opts.runDir);
 
   let framingMeta = meta;
   if (opts.alignFramingRunDir) {
-    framingMeta = await loadMeta(opts.alignFramingRunDir);
+    framingMeta = await loadMetaCached(opts.alignFramingRunDir);
   }
   const fps = Number(meta.fps || 10.0);
   const frameCount = Number(meta.frameCount || 0);
@@ -329,17 +371,12 @@ async function initViewer(opts) {
   }
 
   setStatus("Loading first frame…");
-  const { buffers, loadFrame, prefetchAll } = createFrameLoader(meta, framesBaseUrl);
+  const { buffers, loadFrame, getParsed, prefetchWindow, startIdlePrefetch, cancelIdlePrefetch } =
+    createFrameLoader(meta, framesBaseUrl);
   await loadFrame(0);
   setStatus("Playing…");
-  prefetchAll(setStatus)
-    .then(() => {
-      setStatus("Playing…");
-    })
-    .catch((e) => {
-      console.error(e);
-      setStatus("Ready (background caching incomplete)");
-    });
+  prefetchWindow(0).catch((e) => console.error(e));
+  startIdlePrefetch(setStatus);
 
   let playing = true;
   btnPlayEl.textContent = "Pause";
@@ -353,11 +390,13 @@ async function initViewer(opts) {
   let onTick = null;
   /** @type {Promise<void> | null} */
   let frameLoadInFlight = null;
+  /** @type {Map<number, Uint8Array>} */
+  const softenedColorCache = opts.softenErrorColors ? new Map() : null;
 
   function renderFrame(i) {
-    const buf = buffers[i];
-    if (!buf) return;
-    const { posView, colView } = parseFrameBuffer(buf, nMax);
+    const parsed = getParsed(i);
+    if (!parsed) return;
+    const { posView, colView } = parsed;
     if (useSpheres && pointOrInst instanceof THREE.InstancedMesh) {
       const fi = meta.frames[i];
       const nPts =
@@ -396,11 +435,22 @@ async function initViewer(opts) {
       } else {
         positions.set(posView);
       }
-      colorsU8.set(colView);
-      if (opts.softenErrorColors) {
-        softenErrorMapColors(colorsU8, nMax);
+      if (opts.softenErrorColors && softenedColorCache) {
+        let soft = softenedColorCache.get(i);
+        if (!soft) {
+          soft = new Uint8Array(colView);
+          softenErrorMapColors(soft, nMax);
+          softenedColorCache.set(i, soft);
+        }
+        colorsU8.set(soft);
+      } else {
+        colorsU8.set(colView);
       }
       if (geometry) {
+        const fi = meta.frames[i];
+        const nPts =
+          fi && typeof fi.nPoints === "number" ? Math.min(fi.nPoints, nMax) : nMax;
+        geometry.setDrawRange(0, nPts);
         geometry.attributes.position.needsUpdate = true;
         geometry.attributes.color.needsUpdate = true;
       }
@@ -435,6 +485,7 @@ async function initViewer(opts) {
       loadFrame(idx)
         .then(() => {
           renderFrame(idx);
+          prefetchWindow(idx);
           setStatus(`Paused at frame ${idx + 1}`);
         })
         .catch((e) => {
@@ -442,6 +493,8 @@ async function initViewer(opts) {
           setStatus(`Error loading frame ${idx + 1}`);
         });
     }
+    cancelIdlePrefetch();
+    startIdlePrefetch(setStatus);
   });
 
   function tick(now) {
@@ -460,10 +513,7 @@ async function initViewer(opts) {
       }
       const idx = frameIdx;
       if (buffers[idx]) {
-        for (let k = 1; k <= 6; k++) {
-          const j = (idx + k) % frameCount;
-          if (!buffers[j]) loadFrame(j).catch((e) => console.error(e));
-        }
+        if (idx % 8 === 0) prefetchWindow(idx);
         if (idx !== lastRendered) renderFrame(idx);
       } else if (!frameLoadInFlight) {
         setStatus(`Loading frame ${idx + 1}…`);
@@ -938,6 +988,8 @@ function rowIsHidden(el) {
 async function main() {
   const rowTasks = buildRowTasks();
   const loadAllNow = params.get("eager") === "1";
+  /** One viz row at a time so 3× panels do not flood the network together. */
+  let rowInitChain = Promise.resolve();
 
   const rowEls = document.querySelectorAll("[data-viz-row]");
   if (!rowEls.length) {
@@ -953,14 +1005,17 @@ async function main() {
     return;
   }
 
-  const startRow = async (rowId, tasks) => {
+  const startRow = (rowId, tasks) => {
     setRowPendingStatus(tasks, "Loading…");
-    await initViewerRow(tasks);
-    if (ROW_KP_WIRE[rowId]) wireKpRow(ROW_KP_WIRE[rowId]);
-    requestAnimationFrame(() => {
-      window.dispatchEvent(new Event("resize"));
-      syncKpCameras();
+    rowInitChain = rowInitChain.then(async () => {
+      await initViewerRow(tasks);
+      if (ROW_KP_WIRE[rowId]) wireKpRow(ROW_KP_WIRE[rowId]);
+      requestAnimationFrame(() => {
+        window.dispatchEvent(new Event("resize"));
+        syncKpCameras();
+      });
     });
+    return rowInitChain;
   };
 
   const observeRow = (el, rowId, tasks) => {
