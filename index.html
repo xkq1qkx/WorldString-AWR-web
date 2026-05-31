@@ -17,22 +17,85 @@
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
-    <div class="page">
-      <div class="academic-surface">
-        <header class="hero">
-        <p class="hero-kicker">Actionable world modeling · WorldString</p>
-        <h1 class="hero-title">Actionable World Representation</h1>
-        <p class="hero-tagline">
-          A neural architecture that learns the <strong>state manifold</strong> of real-world objects as a
-          <strong>differentiable digital twin</strong>—from point clouds or RGB-D, toward policy and dynamics.
+    <section class="title-hero" aria-label="Title">
+      <video
+        class="title-hero__video"
+        autoplay
+        muted
+        loop
+        playsinline
+        preload="auto"
+        aria-hidden="true"
+      >
+        <source src="./AWR_title_back.mp4" type="video/mp4" />
+      </video>
+      <div class="title-hero__overlay" aria-hidden="true"></div>
+      <div class="title-hero__top">
+        <span class="title-hero__brand">WorldString</span>
+        <span class="title-hero__date">IEI Lab</span>
+      </div>
+      <div class="title-hero__content">
+        <h1 class="title-hero__title">Actionable World Representation</h1>
+        <p class="title-hero__authors">
+          <span class="title-hero__author">Kunqi Xu<span class="title-hero__eq" aria-label="equal contribution">&#9830;</span><sup>1,5</sup></span>,
+          <span class="title-hero__author">Jitao Li<sup>2</sup></span>,
+          <span class="title-hero__author">Jianglong Ye<sup>3</sup></span>,
+          <span class="title-hero__author">Tianshu Tang<sup>1</sup></span>,
+          <span class="title-hero__author">Isabella Liu<sup>3</sup></span>,
+          <span class="title-hero__author">Sifei Liu<sup>4</sup></span>,
+          <span class="title-hero__author">Xueyan Zou<span class="title-hero__eq" aria-label="equal contribution">&#9830;</span><sup>1</sup></span>
         </p>
-        </header>
+        <ul class="title-hero__affiliations">
+          <li><sup>1</sup>Tsinghua University — IEI Lab</li>
+          <li><sup>2</sup>CalTech</li>
+          <li><sup>3</sup>UC San Diego</li>
+          <li><sup>4</sup>NVIDIA</li>
+          <li><sup>5</sup>Peking University — School of EECS</li>
+          <li><span class="title-hero__eq" aria-hidden="true">&#9830;</span> Equal contribution</li>
+        </ul>
+        <nav class="title-hero__links" aria-label="Paper resources">
+          <a class="title-hero__link" href="#" target="_blank" rel="noopener noreferrer">
+            <svg class="title-hero__link-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path fill="#fff" d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 2 5 5h-5V4z"/>
+              <path fill="#e74c3c" d="M7 10h10v5H7z"/>
+              <path fill="#fff" d="M8.2 13.1h1.1v.9H8.2v-.9zm1.5 0h.8v.9h-.8v-.9zm1.4 0h1.1v.9h-1.1v-.9zm1.5 0h.8v.9h-.8v-.9z"/>
+            </svg>
+            Paper
+          </a>
+          <a class="title-hero__link" href="#" target="_blank" rel="noopener noreferrer">
+            <img
+              class="title-hero__link-icon title-hero__link-icon--arxiv"
+              src="./arxiv-logomark.svg"
+              alt=""
+              width="20"
+              height="20"
+            />
+            arXiv
+          </a>
+          <a class="title-hero__link" href="#" target="_blank" rel="noopener noreferrer">
+            <svg class="title-hero__link-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path fill="currentColor" d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A8.996 8.996 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
+            </svg>
+            Code
+          </a>
+          <a class="title-hero__link" href="#" target="_blank" rel="noopener noreferrer">
+            <svg class="title-hero__link-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path fill="currentColor" d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A8.996 8.996 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
+            </svg>
+            Data
+          </a>
+        </nav>
+      </div>
+      <a class="title-hero__scroll" href="#abstract-heading" aria-label="Scroll to abstract">
+        <span class="title-hero__scroll-arrow" aria-hidden="true"></span>
+      </a>
+    </section>
 
-        <div class="academic-band">
-          <div class="paper-teaser-zone">
-            <div class="paper-teaser-zone__bg" role="presentation" aria-hidden="true"></div>
-            <div class="paper-intro">
-              <section class="paper-blurb" aria-labelledby="abstract-heading">
+    <div class="page">
+      <div class="abstract-teaser-zone">
+        <div class="abstract-teaser-zone__bg" role="presentation" aria-hidden="true"></div>
+        <div class="paper-intro">
+          <section class="paper-blurb" aria-labelledby="abstract-heading">
         <h2 id="abstract-heading" class="blurb-heading">Abstract</h2>
         <p class="blurb-text">
           Recent large models show strong conceptual world modeling, but grounded <em>physical</em> understanding
@@ -49,9 +112,7 @@
           WorldString serves as a versatile building block for physical world models and interfaces naturally with
           policy learning and neural dynamics.
         </p>
-              </section>
-            </div>
-          </div>
+            </section>
         </div>
       </div>
 
