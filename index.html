@@ -17,6 +17,11 @@
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
+    <script>
+      if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+      if (location.hash) history.replaceState(null, "", location.pathname + location.search);
+      window.scrollTo(0, 0);
+    </script>
     <section class="title-hero" aria-label="Title">
       <video
         class="title-hero__video"
@@ -37,13 +42,13 @@
       <div class="title-hero__content">
         <h1 class="title-hero__title">Actionable World Representation</h1>
         <p class="title-hero__authors">
-          <span class="title-hero__author">Kunqi Xu<span class="title-hero__eq" aria-label="equal contribution">&#9830;</span><sup>1,5</sup></span>,
-          <span class="title-hero__author">Jitao Li<sup>2</sup></span>,
-          <span class="title-hero__author">Jianglong Ye<sup>3</sup></span>,
-          <span class="title-hero__author">Tianshu Tang<sup>1</sup></span>,
-          <span class="title-hero__author">Isabella Liu<sup>3</sup></span>,
-          <span class="title-hero__author">Sifei Liu<sup>4</sup></span>,
-          <span class="title-hero__author">Xueyan Zou<span class="title-hero__eq" aria-label="equal contribution">&#9830;</span><sup>1</sup></span>
+          <span class="title-hero__author"><a href="https://xkq1qkx.github.io" target="_blank" rel="noopener noreferrer">Kunqi Xu</a><sup class="title-hero__eq" aria-label="equal contribution">&#9830;</sup><sup>1,5</sup></span>,
+          <span class="title-hero__author"><a href="https://www.linkedin.com/in/jitao-li-373ab5317/" target="_blank" rel="noopener noreferrer">Jitao Li</a><sup>2</sup></span>,
+          <span class="title-hero__author"><a href="https://jianglongye.com" target="_blank" rel="noopener noreferrer">Jianglong Ye</a><sup>3</sup></span>,
+          <span class="title-hero__author"><a href="https://tianshutang.github.io" target="_blank" rel="noopener noreferrer">Tianshu Tang</a><sup>1</sup></span>,
+          <span class="title-hero__author"><a href="https://www.liuisabella.com" target="_blank" rel="noopener noreferrer">Isabella Liu</a><sup>3</sup></span>,
+          <span class="title-hero__author"><a href="https://sifeiliu.net" target="_blank" rel="noopener noreferrer">Sifei Liu</a><sup>4</sup></span>,
+          <span class="title-hero__author"><a href="https://maureenzou.github.io" target="_blank" rel="noopener noreferrer">Xueyan Zou</a><sup class="title-hero__eq" aria-label="equal contribution">&#9830;</sup><sup>1</sup></span>
         </p>
         <ul class="title-hero__affiliations">
           <li><sup>1</sup>Tsinghua University — IEI Lab</li>
@@ -51,10 +56,10 @@
           <li><sup>3</sup>UC San Diego</li>
           <li><sup>4</sup>NVIDIA</li>
           <li><sup>5</sup>Peking University — School of EECS</li>
-          <li><span class="title-hero__eq" aria-hidden="true">&#9830;</span> Equal contribution</li>
+          <li><sup class="title-hero__eq">&#9830;</sup> Equal contribution</li>
         </ul>
         <nav class="title-hero__links" aria-label="Paper resources">
-          <a class="title-hero__link" href="#" target="_blank" rel="noopener noreferrer">
+          <a class="title-hero__link" href="https://arxiv.org/pdf/2605.18743" target="_blank" rel="noopener noreferrer">
             <svg class="title-hero__link-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
               <path fill="#fff" d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 2 5 5h-5V4z"/>
               <path fill="#e74c3c" d="M7 10h10v5H7z"/>
@@ -62,7 +67,7 @@
             </svg>
             Paper
           </a>
-          <a class="title-hero__link" href="#" target="_blank" rel="noopener noreferrer">
+          <a class="title-hero__link" href="https://arxiv.org/abs/2605.18743" target="_blank" rel="noopener noreferrer">
             <img
               class="title-hero__link-icon title-hero__link-icon--arxiv"
               src="./arxiv-logomark.svg"
@@ -86,9 +91,9 @@
           </a>
         </nav>
       </div>
-      <a class="title-hero__scroll" href="#abstract-heading" aria-label="Scroll to abstract">
+      <button class="title-hero__scroll" type="button" id="title-scroll-down" aria-label="Scroll to abstract">
         <span class="title-hero__scroll-arrow" aria-hidden="true"></span>
-      </a>
+      </button>
     </section>
 
     <div class="page">
@@ -575,6 +580,16 @@
     </script>
     <script type="module" src="./app.js?v=lazy6"></script>
     <script>
+      (function () {
+        const scrollBtn = document.getElementById("title-scroll-down");
+        const abstractEl = document.getElementById("abstract-heading");
+        if (scrollBtn && abstractEl) {
+          scrollBtn.addEventListener("click", () => {
+            abstractEl.scrollIntoView({ behavior: "smooth", block: "start" });
+          });
+        }
+      })();
+
       (function () {
         const moreBtn = document.getElementById("viz-more-btn");
         const moreWrap = document.getElementById("viz-more-wrap");
