@@ -104,21 +104,10 @@
           <section class="paper-blurb" aria-labelledby="abstract-heading">
         <h2 id="abstract-heading" class="blurb-heading">Abstract</h2>
         <p class="blurb-text">
-          Recent large models show strong conceptual world modeling, but grounded <em>physical</em> understanding
-          requires representations in which objects are first-class, <strong>actionable</strong> entities with
-          changing state. We study this setting through a world-model lens that separates dynamic
-          <strong>objects</strong> from largely static <strong>background</strong>, and relates canonical shape,
-          sparse structural keypoints, and deformation through a learnable mapping&nbsp;Φ<sub>u</sub>.
+          Inspired by the emergent behaviors in large language models that generalized human intelligence, the research community is pursuing similar emergent capabilities within world models, with a emphasis on modeling the physical world. Within the scope of physical world model, objects are the fundamental primitives that constitute physical reality. From humans to computers, nearly everything we interact with is an object. These objects are rarely static; they are actionable entities with varying states determined by their intrinsic properties. While current methods approach object action states either via video generation or dynamic scene reconstruction, none explicitly model this basic element in a unified, principled way to build an actionable object representation. 
+          
+          We propose WorldString, a neural architecture capable of modeling the state manifold of real-world objects by learning directly from point clouds or RGB-D video streams. Serving as a versatile digital twin, it acts as a foundational building block for physical world models; thus, we name it WorldString. Sweetly, its fully differentiable structure seamlessly enables future integration with policy learning and neural dynamics.
         </p>
-        <p class="blurb-text">
-          We propose <strong>WorldString</strong>, a fully differentiable pipeline that encodes geometry with
-          learnable embeddings, conditions them on object state via a <strong>State Transformer</strong>,
-          refines global structure with an <strong>Object Transformer</strong>, and decodes occupancy with a
-          <strong>Voxel Transformer</strong> from spatial queries. Trained from point clouds or RGB-D streams,
-          WorldString serves as a versatile building block for physical world models and interfaces naturally with
-          policy learning and neural dynamics.
-        </p>
-            </section>
         </div>
       </div>
 
