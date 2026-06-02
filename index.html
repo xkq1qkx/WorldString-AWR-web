@@ -42,22 +42,29 @@
       <div class="title-hero__content">
         <h1 class="title-hero__title">Actionable World Representation</h1>
         <p class="title-hero__authors">
-          <span class="title-hero__author"><a href="https://xkq1qkx.github.io" target="_blank" rel="noopener noreferrer">Kunqi Xu</a><sup class="title-hero__eq" aria-label="equal contribution">&#9830;</sup><sup>1,5</sup></span>,
+          <span class="title-hero__author"><a href="https://xkq1qkx.github.io" target="_blank" rel="noopener noreferrer">Kunqi Xu</a><sup class="title-hero__eq" aria-label="equal contribution">&#9830;</sup><sup>1,4</sup></span>,
           <span class="title-hero__author"><a href="https://www.linkedin.com/in/jitao-li-373ab5317/" target="_blank" rel="noopener noreferrer">Jitao Li</a><sup>2</sup></span>,
           <span class="title-hero__author"><a href="https://jianglongye.com" target="_blank" rel="noopener noreferrer">Jianglong Ye</a><sup>3</sup></span>,
           <span class="title-hero__author"><a href="https://tianshutang.github.io" target="_blank" rel="noopener noreferrer">Tianshu Tang</a><sup>1</sup></span>,
           <span class="title-hero__author"><a href="https://www.liuisabella.com" target="_blank" rel="noopener noreferrer">Isabella Liu</a><sup>3</sup></span>,
-          <span class="title-hero__author"><a href="https://sifeiliu.net" target="_blank" rel="noopener noreferrer">Sifei Liu</a><sup>4</sup></span>,
+          <span class="title-hero__author"><a href="https://sifeiliu.net" target="_blank" rel="noopener noreferrer">Sifei Liu</a><sup>5</sup></span>,
           <span class="title-hero__author"><a href="https://maureenzou.github.io" target="_blank" rel="noopener noreferrer">Xueyan Zou</a><sup class="title-hero__eq" aria-label="equal contribution">&#9830;</sup><sup>1</sup></span>
         </p>
         <ul class="title-hero__affiliations">
           <li><sup>1</sup>Tsinghua University — IEI Lab</li>
           <li><sup>2</sup>CalTech</li>
           <li><sup>3</sup>UC San Diego</li>
-          <li><sup>4</sup>NVIDIA</li>
-          <li><sup>5</sup>Peking University — School of EECS</li>
-          <li><sup class="title-hero__eq">&#9830;</sup> Equal contribution</li>
+          <li><sup>4</sup>Peking University — School of EECS</li>
+          <li><sup>5</sup>NVIDIA</li>
         </ul>
+        <p class="title-hero__equal-note"><sup class="title-hero__eq">&#9830;</sup> Equal contribution</p>
+        <div class="title-hero__affil-logos" aria-label="Institution logos">
+          <img class="title-hero__affil-logo" src="./thu_logo.png" alt="Tsinghua University" width="64" height="64" />
+          <img class="title-hero__affil-logo" src="./caltech_logo.png" alt="Caltech" width="64" height="64" />
+          <img class="title-hero__affil-logo" src="./ucsd_logo.png" alt="UC San Diego" width="64" height="64" />
+          <img class="title-hero__affil-logo" src="./pku_logo.png" alt="Peking University" width="64" height="64" />
+          <img class="title-hero__affil-logo" src="./nvidia_logo.png" alt="NVIDIA" width="64" height="64" />
+        </div>
         <nav class="title-hero__links" aria-label="Paper resources">
           <a class="title-hero__link" href="https://arxiv.org/pdf/2605.18743" target="_blank" rel="noopener noreferrer">
             <svg class="title-hero__link-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
@@ -91,14 +98,10 @@
           </a>
         </nav>
       </div>
-      <button class="title-hero__scroll" type="button" id="title-scroll-down" aria-label="Scroll to abstract">
-        <span class="title-hero__scroll-arrow" aria-hidden="true"></span>
-      </button>
     </section>
 
     <div class="page">
       <div class="abstract-teaser-zone">
-        <div class="abstract-teaser-zone__bg" role="presentation" aria-hidden="true"></div>
         <div class="paper-intro">
           <section class="paper-blurb" aria-labelledby="abstract-heading">
         <h2 id="abstract-heading" class="blurb-heading">Abstract</h2>
@@ -141,8 +144,7 @@
           <h2 id="viz-heading-title" class="section-title">Interactive visualization</h2>
         <p class="section-lead">
           Each row has three panels (left to right): <strong>input keypoints</strong>,
-          <strong>learned token-colored shape</strong>, and <strong>error map</strong> (same timestamps as the
-          <code>.da</code> sequence). Drag to rotate, scroll to zoom; pan is disabled. The camera target stays at the
+          <strong>learned token-colored shape</strong>, and <strong>error map</strong>. Drag to rotate, scroll to zoom; pan is disabled. The camera target stays at the
           cloud / keypoint center. Use <strong>Sync other panels to this view</strong> on the keypoint column to mirror
           its camera, frame, and play/pause state to the other two panels in that row.
         </p>
@@ -205,11 +207,6 @@
         </div>
 
           <h3 class="viz-subsection-title">SMPL football motion (skinning)</h3>
-        <p class="section-lead viz-subsection-lead">
-          SMPL kicking; keypoints from the aligned <code>smpl_mocap_*.da</code> sequence (same frame indices as the
-          shape export).
-        </p>
-
           <div class="viz-grid viz-grid--cols3" data-viz-row="smpl">
             <article class="viz-card" data-side="kp">
               <div class="viz-card-head">
@@ -324,11 +321,6 @@
 
           <div class="viz-more-block is-hidden" data-viz-more-row="double">
         <h3 class="viz-subsection-title">Double stretch (soft / deformable)</h3>
-        <p class="section-lead viz-subsection-lead">
-          Double-stretch sloth; keypoints from aligned <code>state_*.da</code> in the training split (indices match the
-          shape sequence).
-        </p>
-
         <div class="viz-grid viz-grid--cols3" data-viz-row="double">
           <article class="viz-card" data-side="kp">
             <div class="viz-card-head">
@@ -542,7 +534,7 @@
             loading="lazy"
             decoding="async"
           />
-          <figcaption class="paper-figure-caption">Overview of the WorldString pipeline (high-resolution PNG).</figcaption>
+          <figcaption class="paper-figure-caption">Overview of the WorldString pipeline.</figcaption>
         </figure>
       </section>
 
@@ -580,16 +572,6 @@
     </script>
     <script type="module" src="./app.js?v=lazy6"></script>
     <script>
-      (function () {
-        const scrollBtn = document.getElementById("title-scroll-down");
-        const abstractEl = document.getElementById("abstract-heading");
-        if (scrollBtn && abstractEl) {
-          scrollBtn.addEventListener("click", () => {
-            abstractEl.scrollIntoView({ behavior: "smooth", block: "start" });
-          });
-        }
-      })();
-
       (function () {
         const moreBtn = document.getElementById("viz-more-btn");
         const moreWrap = document.getElementById("viz-more-wrap");
