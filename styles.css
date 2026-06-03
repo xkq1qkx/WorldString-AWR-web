@@ -33,7 +33,7 @@ body {
   --abstract-max-width: min(40rem, 72%);
   --abstract-pad-bottom: 6rem;
   --paper-intro-pad-top: 3rem;
-  --title-hero-overlay: rgba(0, 0, 0, 0.2);
+  --title-hero-overlay: rgba(0, 0, 0, 0.1);
 }
 
 .academic-surface {
@@ -128,14 +128,14 @@ body {
   font-size: clamp(0.95rem, 1.6vw, 1.08rem);
   font-weight: 700;
   letter-spacing: 0.04em;
-  color: rgba(255, 255, 255, 0.95);
+  color: rgba(255, 255, 255, 0.99);
 }
 
 .title-hero__date {
   font-family: "Crimson Pro", Georgia, serif;
   font-size: clamp(0.95rem, 1.5vw, 1.05rem);
   font-style: italic;
-  color: rgba(255, 255, 255, 0.78);
+  color: rgba(255, 255, 255, 0.99);
 }
 
 .title-hero__content {
@@ -175,6 +175,7 @@ body {
   line-height: 1.65;
   letter-spacing: -0.015em;
   color: rgba(255, 255, 255, 0.94);
+  text-shadow: 0 1px 16px rgba(0, 0, 0, 0.4);
 }
 
 @media (min-width: 900px) {
@@ -231,7 +232,7 @@ body {
   list-style: none;
   font-size: clamp(1rem, 1.62vw, 1.16rem);
   line-height: 1.55;
-  color: rgba(255, 255, 255, 0.78);
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .title-hero__affiliations li {

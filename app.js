@@ -69,6 +69,19 @@ function loadMetaCached(runDir) {
   return metaCache.get(runDir);
 }
 
+/** Keep every Nth frame (N=2 → half the .bin fetches); scale fps so playback duration is unchanged. */
+function subsampleMetaFrames(meta, stride) {
+  if (!stride || stride <= 1 || !meta?.frames?.length) return meta;
+  const frames = meta.frames.filter((_, i) => i % stride === 0);
+  const fps = Number(meta.fps || 10);
+  return {
+    ...meta,
+    frames,
+    frameCount: frames.length,
+    fps: fps / stride,
+  };
+}
+
 function parseFrameBuffer(buffer, nMax) {
   const posCount = nMax * 3;
   const posByteLen = posCount * 4;
@@ -222,6 +235,8 @@ function createFrameLoader(meta, framesBaseUrl) {
  * @param {number} [opts.pointSize] PointsMaterial size in pixels (default 2)
  * @param {boolean} [opts.keypointSpheres] use instanced spheres instead of screen-space points (keypoint panels)
  * @param {number} [opts.sphereRadiusScale] sphere radius = (alignFraming? framingRadius : kpRadius) * this
+ * @param {boolean} [opts.autoPlay] start playback after first frame loads (default false)
+ * @param {number} [opts.frameStride] keep every Nth source frame (2 = half load, same motion speed)
  * @param {string} [opts.alignFramingRunDir] sibling shape run (e.g. token panel) — use its radius for camera, clip planes, and sphere marker size; joint positions stay in true shape space (no extra scale)
  */
 async function initViewer(opts) {
@@ -248,11 +263,14 @@ async function initViewer(opts) {
   };
 
   setStatus("Loading metadata…");
-  const meta = await loadMetaCached(opts.runDir);
+  const frameStride = Math.max(1, Math.floor(Number(opts.frameStride) || 1));
+  const metaRaw = await loadMetaCached(opts.runDir);
+  const meta = subsampleMetaFrames(metaRaw, frameStride);
 
   let framingMeta = meta;
   if (opts.alignFramingRunDir) {
-    framingMeta = await loadMetaCached(opts.alignFramingRunDir);
+    const framingRaw = await loadMetaCached(opts.alignFramingRunDir);
+    framingMeta = subsampleMetaFrames(framingRaw, frameStride);
   }
   const fps = Number(meta.fps || 10.0);
   const frameCount = Number(meta.frameCount || 0);
@@ -374,12 +392,13 @@ async function initViewer(opts) {
   const { buffers, loadFrame, getParsed, prefetchWindow, startIdlePrefetch, cancelIdlePrefetch } =
     createFrameLoader(meta, framesBaseUrl);
   await loadFrame(0);
-  setStatus("Playing…");
   prefetchWindow(0).catch((e) => console.error(e));
   startIdlePrefetch(setStatus);
 
-  let playing = true;
-  btnPlayEl.textContent = "Pause";
+  const autoPlay = opts.autoPlay === true;
+  let playing = autoPlay;
+  btnPlayEl.textContent = playing ? "Pause" : "Play";
+  setStatus(playing ? "Playing…" : "Paused at frame 1");
   let frameIdx = 0;
   let lastRendered = -1;
   const frameMs = 1000 / fps;
@@ -780,6 +799,7 @@ function buildRowTasks() {
         sliderId: "slider-smpl-left",
         frameTextId: "frameText-smpl-left",
         btnPlayId: "btnPlay-smpl-left",
+        frameStride: 3,
       },
       {
         containerId: "viewer-smpl-right",
@@ -789,6 +809,7 @@ function buildRowTasks() {
         frameTextId: "frameText-smpl-right",
         btnPlayId: "btnPlay-smpl-right",
         softenErrorColors: true,
+        frameStride: 3,
       },
       {
         containerId: "viewer-kp-smpl",
@@ -800,6 +821,7 @@ function buildRowTasks() {
         keypointSpheres: true,
         sphereRadiusScale: kpSphereSmpl,
         alignFramingRunDir: runSmplLeft,
+        frameStride: 3,
       },
     ],
     double: [
@@ -812,6 +834,7 @@ function buildRowTasks() {
         btnPlayId: "btnPlay-double-left",
         initialFov: 55,
         cameraDistanceScale: 1.5,
+        frameStride: 3,
       },
       {
         containerId: "viewer-double-right",
@@ -823,6 +846,7 @@ function buildRowTasks() {
         softenErrorColors: true,
         initialFov: 55,
         cameraDistanceScale: 1.5,
+        frameStride: 3,
       },
       {
         containerId: "viewer-kp-double",
@@ -836,6 +860,7 @@ function buildRowTasks() {
         keypointSpheres: true,
         sphereRadiusScale: kpSphereDouble,
         alignFramingRunDir: runDoubleLeft,
+        frameStride: 3,
       },
     ],
     ear: [
@@ -975,14 +1000,21 @@ const ROW_KP_WIRE = {
   },
 };
 
-async function initViewerRow(tasks) {
-  const results = await Promise.all(tasks.map((opts) => initViewerTask(opts)));
+async function initViewerRow(tasks, { autoPlay = false } = {}) {
+  const results = await Promise.all(
+    tasks.map((opts) => initViewerTask({ ...opts, autoPlay }))
+  );
   for (const r of results) registerViewerResult(r);
   return results;
 }
 
 function rowIsHidden(el) {
   return Boolean(el.closest(".viz-more-block.is-hidden"));
+}
+
+/** Robot hand row autoplays; other interactive-viz rows start paused. Train section keeps autoplay. */
+function shouldAutoPlayRow(rowId) {
+  return rowId === "hand" || rowId === "train";
 }
 
 async function main() {
@@ -995,7 +1027,7 @@ async function main() {
   if (!rowEls.length) {
     console.warn("No [data-viz-row] grids found; loading all viewers immediately.");
     for (const [rowId, tasks] of Object.entries(rowTasks)) {
-      await initViewerRow(tasks);
+      await initViewerRow(tasks, { autoPlay: shouldAutoPlayRow(rowId) });
       if (ROW_KP_WIRE[rowId]) wireKpRow(ROW_KP_WIRE[rowId]);
     }
     requestAnimationFrame(() => {
@@ -1007,8 +1039,9 @@ async function main() {
 
   const startRow = (rowId, tasks) => {
     setRowPendingStatus(tasks, "Loading…");
+    const autoPlay = shouldAutoPlayRow(rowId);
     rowInitChain = rowInitChain.then(async () => {
-      await initViewerRow(tasks);
+      await initViewerRow(tasks, { autoPlay });
       if (ROW_KP_WIRE[rowId]) wireKpRow(ROW_KP_WIRE[rowId]);
       requestAnimationFrame(() => {
         window.dispatchEvent(new Event("resize"));
