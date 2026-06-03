@@ -786,6 +786,36 @@ body {
   display: block;
 }
 
+.viewer-loading {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 1.25rem;
+  box-sizing: border-box;
+  background: rgba(243, 245, 248, 0.88);
+  pointer-events: none;
+}
+
+.viewer-loading[hidden] {
+  display: none;
+}
+
+.viewer-loading__text {
+  margin: 0;
+  max-width: 16rem;
+  font-size: 0.88rem;
+  line-height: 1.45;
+  text-align: center;
+  color: var(--muted);
+}
+
+.viewer--loading canvas {
+  visibility: hidden;
+}
+
 .inline-video {
   width: 100%;
   height: auto;
@@ -919,6 +949,20 @@ button {
 button:hover {
   background: var(--surface2);
   border-color: rgba(0, 0, 0, 0.14);
+}
+
+button:disabled,
+button.is-awaiting-frame:disabled {
+  background: var(--surface2);
+  color: rgba(26, 29, 36, 0.38);
+  border-color: rgba(0, 0, 0, 0.08);
+  cursor: not-allowed;
+}
+
+button:disabled:hover,
+button.is-awaiting-frame:disabled:hover {
+  background: var(--surface2);
+  border-color: rgba(0, 0, 0, 0.08);
 }
 
 .viz-footnote {

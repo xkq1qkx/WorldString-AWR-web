@@ -251,6 +251,9 @@ async function initViewer(opts) {
     throw new Error(`Missing controls for #${opts.containerId} (slider/frameText/play button)`);
   }
 
+  setViewerControlsPending(btnPlayEl, sliderEl, true);
+  setViewerLoadingOverlay(viewerEl, true);
+
   const framesBaseUrl = `${opts.runDir}/frames/`;
 
   const setStatus = (text) => {
@@ -397,7 +400,6 @@ async function initViewer(opts) {
 
   const autoPlay = opts.autoPlay === true;
   let playing = autoPlay;
-  btnPlayEl.textContent = playing ? "Pause" : "Play";
   setStatus(playing ? "Playing…" : "Paused at frame 1");
   let frameIdx = 0;
   let lastRendered = -1;
@@ -478,6 +480,10 @@ async function initViewer(opts) {
   }
 
   renderFrame(0);
+
+  setViewerLoadingOverlay(viewerEl, false);
+  setViewerControlsPending(btnPlayEl, sliderEl, false);
+  btnPlayEl.textContent = playing ? "Pause" : "Play";
 
   btnPlayEl.addEventListener("click", () => {
     playing = !playing;
@@ -696,11 +702,16 @@ function setStatusError(statusId, err) {
 }
 
 async function initViewerTask(opts) {
+  const viewerEl = document.getElementById(opts.containerId);
+  const btnPlayEl = opts.btnPlayId ? document.getElementById(opts.btnPlayId) : null;
+  const sliderEl = opts.sliderId ? document.getElementById(opts.sliderId) : null;
   try {
     return { ok: true, viewer: await initViewer(opts), opts };
   } catch (err) {
     console.error(`[${opts.runDir}]`, err);
     if (opts.statusId) setStatusError(opts.statusId, err);
+    if (viewerEl) setViewerLoadingOverlay(viewerEl, false);
+    setViewerControlsPending(btnPlayEl, sliderEl, true);
     return { ok: false, err, opts };
   }
 }
@@ -721,6 +732,50 @@ function setRowPendingStatus(tasks, text = "Scroll to load…") {
     if (!t.statusId) continue;
     const el = document.getElementById(t.statusId);
     if (el) el.textContent = text;
+  }
+}
+
+function setViewerControlsPending(btnPlayEl, sliderEl, pending) {
+  if (btnPlayEl) {
+    btnPlayEl.textContent = "Play";
+    btnPlayEl.disabled = pending;
+    btnPlayEl.classList.toggle("is-awaiting-frame", pending);
+  }
+  if (sliderEl) sliderEl.disabled = pending;
+}
+
+function ensureViewerLoadingOverlay(viewerEl) {
+  let el = viewerEl.querySelector(".viewer-loading");
+  if (!el) {
+    el = document.createElement("div");
+    el.className = "viewer-loading";
+    el.setAttribute("role", "status");
+    el.innerHTML =
+      '<p class="viewer-loading__text">Please wait — loading first frame…</p>';
+    viewerEl.appendChild(el);
+  }
+  return el;
+}
+
+function setViewerLoadingOverlay(viewerEl, visible, message) {
+  const el = ensureViewerLoadingOverlay(viewerEl);
+  if (message) {
+    const textEl = el.querySelector(".viewer-loading__text");
+    if (textEl) textEl.textContent = message;
+  }
+  el.hidden = !visible;
+  viewerEl.classList.toggle("viewer--loading", visible);
+}
+
+function setRowPendingControls(tasks, pending = true) {
+  for (const t of tasks) {
+    const btnPlayEl = t.btnPlayId ? document.getElementById(t.btnPlayId) : null;
+    const sliderEl = t.sliderId ? document.getElementById(t.sliderId) : null;
+    setViewerControlsPending(btnPlayEl, sliderEl, pending);
+    if (t.containerId && pending) {
+      const viewerEl = document.getElementById(t.containerId);
+      if (viewerEl) setViewerLoadingOverlay(viewerEl, true);
+    }
   }
 }
 
@@ -1019,6 +1074,9 @@ function shouldAutoPlayRow(rowId) {
 
 async function main() {
   const rowTasks = buildRowTasks();
+  for (const tasks of Object.values(rowTasks)) {
+    setRowPendingControls(tasks, true);
+  }
   const loadAllNow = params.get("eager") === "1";
   /** One viz row at a time so 3× panels do not flood the network together. */
   let rowInitChain = Promise.resolve();
