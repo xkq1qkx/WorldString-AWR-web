@@ -406,6 +406,44 @@ body {
   color: var(--text);
 }
 
+.checkpoint-demo-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.65rem 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.checkpoint-demo-heading .section-title {
+  margin: 0;
+}
+
+.checkpoint-code-btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.42rem 1rem;
+  border-radius: 999px;
+  background: var(--text);
+  color: #fff;
+  font-family: "Source Sans 3", ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.88rem;
+  font-weight: 600;
+  line-height: 1;
+  text-decoration: none;
+  border: 1px solid transparent;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.checkpoint-code-btn:hover {
+  background: #2a2d34;
+  transform: translateY(-1px);
+}
+
+.checkpoint-code-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
 .worldstring-gradient {
   background: linear-gradient(90deg, #2d39e6 0%, #6ca4f2 45%, #71c978 100%);
   -webkit-background-clip: text;

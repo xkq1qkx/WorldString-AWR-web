@@ -492,10 +492,23 @@
         </div>
       </section>
 
+      <section class="paper-figure-section" aria-labelledby="checkpoint-demo-heading">
+        <div class="checkpoint-demo-heading">
+          <h2 id="checkpoint-demo-heading" class="section-title">Local visualization based on checkpoints</h2>
+          <a class="checkpoint-code-btn" href="https://github.com/MaureenZOU/worldstring" target="_blank" rel="noopener noreferrer">Code here</a>
+        </div>
+        <figure class="pipeline-video-wrap">
+          <video class="pipeline-video" controls autoplay muted loop playsinline preload="metadata">
+            <source src="./checkpoint_demo.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+        </figure>
+      </section>
+
       <section class="paper-figure-section" aria-labelledby="video-intro-heading">
         <h2 id="video-intro-heading" class="section-title">3 mins Video Intro to <span class="worldstring-gradient">WorldString</span></h2>
         <figure class="pipeline-video-wrap">
-          <video class="pipeline-video" controls playsinline preload="metadata">
+          <video class="pipeline-video" controls playsinline preload="metadata" data-allow-audio>
             <source src="./worldstring2.mp4" type="video/mp4" />
             Your browser does not support the video tag.
           </video>
@@ -517,6 +530,19 @@
       }
     </script>
     <script type="module" src="./app.js?v=lazy11"></script>
+    <script>
+      document.querySelectorAll("video:not([data-allow-audio])").forEach(function (video) {
+        video.muted = true;
+        video.defaultMuted = true;
+        video.setAttribute("muted", "");
+        video.addEventListener("volumechange", function () {
+          if (!video.muted || video.volume > 0) {
+            video.muted = true;
+            video.volume = 0;
+          }
+        });
+      });
+    </script>
     <script>
       (function () {
         const moreBtn = document.getElementById("viz-more-btn");
