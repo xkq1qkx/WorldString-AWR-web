@@ -29,7 +29,7 @@ const kpSphereGo2 = 0.005;
 /** Max concurrent frame .bin fetches across all viewers on the page. */
 const GLOBAL_FRAME_FETCH_CONCURRENCY = Number(params.get("fetchConcurrency")) || 12;
 /** Frames ahead/behind the playhead to prefetch (not the whole sequence). */
-const PREFETCH_RADIUS = Number(params.get("prefetchRadius")) || 18;
+const PREFETCH_RADIUS = Number(params.get("prefetchRadius")) || 12;
 /** Share frames_meta.json fetches across panels that use the same run folder. */
 const metaCache = new Map();
 
