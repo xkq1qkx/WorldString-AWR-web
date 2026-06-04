@@ -694,6 +694,10 @@ function wireKpFollow(leader, followers, checkbox, followerUi) {
       setFollowerUiDisabled(false);
     }
   });
+
+  if (checkbox.checked) {
+    checkbox.dispatchEvent(new Event("change"));
+  }
 }
 
 function setStatusError(statusId, err) {
