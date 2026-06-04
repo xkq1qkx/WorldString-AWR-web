@@ -30,7 +30,7 @@ body {
   --accent-soft: rgba(154, 122, 24, 0.12);
   --page-pad-inline: clamp(4rem, 15vw, 22rem);
   --page-pad-top: 3rem;
-  --abstract-max-width: min(40rem, 72%);
+  --abstract-max-width: 100%;
   --abstract-pad-bottom: 6rem;
   --paper-intro-pad-top: 3rem;
   --title-hero-overlay: rgba(0, 0, 0, 0.1);
@@ -47,9 +47,9 @@ body {
 .abstract-teaser-zone {
   position: relative;
   z-index: 1;
-  width: 100vw;
-  max-width: 100vw;
-  margin: calc(-1 * var(--page-pad-top)) calc(50% - 50vw) 0;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
   padding: 0;
   box-sizing: border-box;
   background: #fff;
@@ -128,14 +128,22 @@ body {
   font-size: clamp(0.95rem, 1.6vw, 1.08rem);
   font-weight: 700;
   letter-spacing: 0.04em;
-  color: rgba(255, 255, 255, 0.99);
+  background: linear-gradient(90deg, #2d39e6 0%, #6ca4f2 45%, #71c978 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: none;
 }
 
 .title-hero__date {
-  font-family: "Crimson Pro", Georgia, serif;
-  font-size: clamp(0.95rem, 1.5vw, 1.05rem);
-  font-style: italic;
-  color: rgba(255, 255, 255, 0.99);
+  font-family: "Source Sans 3", ui-sans-serif, system-ui, sans-serif;
+  font-size: clamp(0.95rem, 1.6vw, 1.08rem);
+  font-style: normal;
+  background: linear-gradient(90deg, #2d39e6 0%, #6ca4f2 45%, #71c978 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: none;
 }
 
 .title-hero__content {
@@ -151,7 +159,7 @@ body {
 
 .title-hero__title {
   margin: 0 0 1.75rem;
-  font-family: "Crimson Pro", Georgia, "Times New Roman", serif;
+  font-family: "Source Sans 3", ui-sans-serif, system-ui, sans-serif;
   font-weight: 700;
   font-size: clamp(2.55rem, 5.4vw, 5.85rem);
   line-height: 1.06;
@@ -227,16 +235,24 @@ body {
 }
 
 .title-hero__affiliations {
-  margin: 0;
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0.9rem;
+  max-width: 100%;
+  margin: 0 auto;
   padding: 0;
   list-style: none;
-  font-size: clamp(1rem, 1.62vw, 1.16rem);
-  line-height: 1.55;
-  color: rgba(255, 255, 255, 0.9);
+  font-size: clamp(0.72rem, 1vw, 0.9rem);
+  line-height: 1.35;
+  color: rgba(255, 255, 255, 0.94);
+  text-shadow: 0 1px 5px rgba(45, 48, 54, 0.82), 0 0 14px rgba(45, 48, 54, 0.55);
 }
 
 .title-hero__affiliations li {
   margin: 0;
+  white-space: nowrap;
 }
 
 .title-hero__affiliations sup {
@@ -328,7 +344,7 @@ body {
 }
 
 .abstract-teaser-zone .paper-intro {
-  padding-top: var(--paper-intro-pad-top);
+  padding: var(--paper-intro-pad-top) 0 var(--abstract-pad-bottom);
 }
 
 .paper-intro {
@@ -354,7 +370,7 @@ body {
 
 .blurb-heading {
   margin: 0 0 0.85rem;
-  font-family: "Crimson Pro", Georgia, serif;
+  font-family: "Source Sans 3", ui-sans-serif, system-ui, sans-serif;
   font-size: 1.52rem;
   font-weight: 600;
   color: var(--text);
@@ -384,10 +400,17 @@ body {
 
 .section-title {
   margin: 0 0 0.5rem;
-  font-family: "Crimson Pro", Georgia, serif;
+  font-family: "Source Sans 3", ui-sans-serif, system-ui, sans-serif;
   font-size: 1.48rem;
   font-weight: 600;
   color: var(--text);
+}
+
+.worldstring-gradient {
+  background: linear-gradient(90deg, #2d39e6 0%, #6ca4f2 45%, #71c978 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 .section-lead {
@@ -396,6 +419,10 @@ body {
   width: 100%;
   font-size: 1.03rem;
   color: var(--muted);
+}
+
+.section-lead + .viz-footnote {
+  margin-top: -1rem;
 }
 
 .paper-figure-section {
@@ -580,7 +607,7 @@ body {
 }
 
 .viz-reveal__label {
-  font-family: "Crimson Pro", Georgia, serif;
+  font-family: "Source Sans 3", ui-sans-serif, system-ui, sans-serif;
   font-size: 1.22rem;
   font-weight: 700;
   letter-spacing: 0.04em;
@@ -623,7 +650,7 @@ body {
 
 .viz-subsection-title {
   margin: 2.25rem 0 0.85rem;
-  font-family: "Crimson Pro", Georgia, serif;
+  font-family: "Source Sans 3", ui-sans-serif, system-ui, sans-serif;
   font-size: 1.28rem;
   font-weight: 600;
   color: var(--text);
@@ -966,7 +993,7 @@ button.is-awaiting-frame:disabled:hover {
 }
 
 .viz-footnote {
-  margin: 1rem 0 0;
+  margin: 0.5rem 0 0;
   font-size: 0.82rem;
   color: var(--muted);
   max-width: 100%;
